@@ -1,6 +1,6 @@
 import telebot
 from telebot import types
-
+from dataBase import db_connect, db_coins
 
 TOKEN = '6273302502:AAGGO3PgrLDwIG9mqwUOU-nSQ3yWuWWVtYw'
 bot = telebot.TeleBot(TOKEN)
@@ -8,6 +8,7 @@ bot = telebot.TeleBot(TOKEN)
 
 @bot.message_handler(commands=['start'])
 def start(message):
+    db_connect(message.from_user.id)
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
     item1 = types.KeyboardButton('Перейти на сайт')
     item2 = types.KeyboardButton('Получить инструкцию')
@@ -35,13 +36,17 @@ def bot_message(message):
 
 @bot.message_handler(content_types=['photo'])
 def get_photo(message):
-    markup = types.InlineKeyboardMarkup()
-    item1 = types.InlineKeyboardButton('Скачать архив .zip', callback_data='save')
-    item2 = types.InlineKeyboardButton('👍', callback_data='like')
-    item3 = types.InlineKeyboardButton('👎', callback_data='dislike')
-    markup.row(item2, item3)
-    markup.add(item1)
-    bot.reply_to(message, 'красивое', reply_markup=markup)
+    if db_coins(message.from_user.id):
+        markup = types.InlineKeyboardMarkup()
+        item1 = types.InlineKeyboardButton('Скачать архив .zip', callback_data='save')
+        item2 = types.InlineKeyboardButton('👍', callback_data='like')
+        item3 = types.InlineKeyboardButton('👎', callback_data='dislike')
+        markup.row(item2, item3)
+        markup.add(item1)
+        bot.reply_to(message, 'красивое', reply_markup=markup)
+    else:
+        bot.send_message(message.chat.id, 'Упс! Ваши лимит закончился. Оратитесь к администратору для пополнения счета.')
+
 
 
 @bot.callback_query_handler(func=lambda callback: True)
