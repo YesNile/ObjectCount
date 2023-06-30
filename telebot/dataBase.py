@@ -28,3 +28,13 @@ def db_coins(user_id):
         else:
             return False
     con.close()
+
+
+def db_score(user_id):
+    con = psycopg2.connect(host="127.0.0.1", user="postgres", password="12345", database="telegramBot", port="5432")
+    cur = con.cursor()
+    cur.execute("SELECT coins FROM users WHERE id = %s", (user_id,))
+    user = cur.fetchall()
+    for coin in user:
+        return coin[0]
+    con.close()

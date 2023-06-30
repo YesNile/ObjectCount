@@ -1,6 +1,6 @@
 import telebot
 from telebot import types
-from dataBase import db_connect, db_coins
+from dataBase import db_connect, db_coins, db_score
 
 TOKEN = '6273302502:AAGGO3PgrLDwIG9mqwUOU-nSQ3yWuWWVtYw'
 bot = telebot.TeleBot(TOKEN)
@@ -29,7 +29,8 @@ def bot_message(message):
         elif message.text == 'Получить инструкцию':
             bot.send_message(message.chat.id, 'Для удовлетворительного результата нужна фотография в хорошем качестве, на контрастном для объектов фоне, желательно снимать близко к объектам')
         elif message.text == 'Посмотреть счет':
-            bot.send_message(message.chat.id, 'На вашем счете: ')
+            coin = db_score(message.from_user.id)
+            bot.send_message(message.chat.id, f'На вашем счете: {coin} монет')
         elif message.text == 'Посмотреть историю':
             bot.send_message(message.chat.id, 'Ваша история:')
 
@@ -45,7 +46,7 @@ def get_photo(message):
         markup.add(item1)
         bot.reply_to(message, 'красивое', reply_markup=markup)
     else:
-        bot.send_message(message.chat.id, 'Упс! Ваши лимит закончился. Оратитесь к администратору для пополнения счета.')
+        bot.send_message(message.chat.id, 'Упс! Ваш лимит закончился. Обатитесь к администратору для пополнения счета.')
 
 
 
