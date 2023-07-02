@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ObjectCount</title>
+  <style>
+    /* Общие стили */
+    body {
+      background-color: #0e1621;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 250px;
+      color: #fff;
+    }
+
+    h1 {
+      text-align: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background-color: #0e1621;
+      padding: 20px;
+      margin: 0;
+      z-index: 999;
+    }
+	
+	h2 {
+      text-align: center;
+      position: fixed;
+      top: 60px;
+      left: 0;
+      right: 0;
+      background-color: #0e1621;
+      padding: 20px;
+      margin: 0;
+      z-index: 999;
+    }
+
+    /* Стили для макета страницы */
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding-top: 100px;
+    }
+
+    form {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    input[type=file] {
+      margin-bottom: 10px;
+    }
+
+    input[type=submit] {
+      background-color: #1f304e;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    input[type=submit]:hover {
+      background-color: #45a049;
+    }
+
+    /* Стили для кнопки в углу экрана */
+    .menu-button {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      width: 20px;
+      height: 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      z-index: 999;
+    }
+
+    /* Стили для меню */
+    .menu {
+      position: fixed;
+      top: 60px;
+      right: 40px;
+      background-color: #17212b;
+      padding: 10px;
+      border: 1px solid #000;
+      border-radius: 4px;
+      display: none;
+      z-index: 999;
+    }
+
+    .menu-cell {
+      padding: 10px;
+      margin-bottom: 10px;
+      background-color: #112437;
+      border-radius: 4px;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .menu-cell:hover {
+      background-color: #1C3A58;
+    }
+
+    /* Стили для подвала */
+    .footer {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      display: flex;
+      align-items: center;
+      color: #fff;
+    }
+
+    .footer-text {
+      margin-right: 10px;
+    }
+
+    .telegram-icon {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* Стили для кнопки "Скачать архив" */
+    .download-button {
+      background-color: #1f304e;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      display: none;
+    }
+
+    .download-button:hover {
+      background-color: #45a049;
+    }
+
+    /* Стили для контейнеров с фотографиями */
+    #left-images-container,
+    #right-images-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .image-container {
+      flex-basis: 33.33%;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+
+    .image-container img {
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>Привет,Давай распознаем твои объекты?</h1>
+  <h2>Наш проект представляет собой веб-приложение, которое позволяет пользователям загружать фотографии для обработки с использованием компьютерного зрения. После загрузки фото, наше приложение применяет алгоритмы компьютерного зрения для выделения объектов на изображении.В ответ вы получите количество объектов и все их мы вырежем в отдельное изображение без фона.</h2>
+  <div class="container">
+    <form id="upload-form" action="/upload" method="post" enctype="multipart/form-data">
+      <label for="image">Выберите изображение:</label>
+      <input type="file" id="image" name="image" accept="image/jpeg, image/png" required>
+      <input type="submit" value="Загрузить">
+    </form>
+    <div id="left-images-container"></div>
+    <a id="download-link" href="#" download class="download-button">Скачать архив</a>
+    <div id="right-images-container"></div>
+  </div>
+
+  <!-- Кнопка в углу экрана -->
+  <button class="menu-button" onclick="toggleMenu()"></button>
+
+  <!-- Меню -->
+  <div class="menu" id="menu">
+    <div class="menu-cell">Баланс токенов: <span id="balance">0</span></div>
+    <div class="menu-cell" onclick="reloadTokens()">Пополнить токены</div>
+    <div class="menu-cell" onclick="logout()">Выйти из аккаунта</div>
+  </div>
+
+  <!-- Подвал -->
+  <div class="footer">
+    <span class="footer-text">Наш бот в телеграм</span>
+    <a href="https://t.me/ObjectCounterBot">
+      <img class="telegram-icon" src="D:\Данил\Downloads\Daco_4925781.png" alt="Telegram">
+    </a>
+  </div>
+
+  <script>
+    // Функция для отображения/скрытия меню
+    function toggleMenu() {
+      var menu = document.getElementById("menu");
+      menu.style.display = (menu.style.display === "block") ? "none" : "block";
+    }
+
+    // Функция для пополнения токенов
+    function reloadTokens() {
+      // Код для пополнения токенов
+    }
+
+    // Функция для выхода из аккаунта
+    function logout() {
+      // Код для выхода из аккаунта
+    }
+
+    // Функция для отображения/скрытия кнопки "Скачать архив"
+    function toggleDownloadButton(show) {
+      var downloadButton = document.getElementById("download-link");
+      if (show) {
+        downloadButton.style.display = "block";
+      } else {
+        downloadButton.style.display = "none";
+      }
+    }
+
+    // Функция для отображения фотографий слева и справа
+    function displayImages(leftImages, rightImages) {
+      var leftContainer = document.getElementById("left-images-container");
+      var rightContainer = document.getElementById("right-images-container");
+
+      // Очистка контейнеров перед отображением новых фотографий
+      leftContainer.innerHTML = "";
+      rightContainer.innerHTML = "";
+
+      // Отображение фотографий слева
+      leftImages.forEach(function(imageUrl) {
+        var imageContainer = document.createElement("div");
+        imageContainer.className = "image-container";
+        var image = document.createElement("img");
+        image.src = imageUrl;
+        imageContainer.appendChild(image);
+        leftContainer.appendChild(imageContainer);
+      });
+
+      // Отображение фотографий справа
+      rightImages.forEach(function(imageUrl) {
+        var imageContainer = document.createElement("div");
+        imageContainer.className = "image-container";
+        var image = document.createElement("img");
+        image.src = imageUrl;
+        imageContainer.appendChild(image);
+        rightContainer.appendChild(imageContainer);
+      });
+    }
+
+    // Функция для обработки ответа с бэкенда
+    function handleResponse(response) {
+      // Проверка условия для отображения кнопки "Скачать архив"
+      var showDownloadButton = response.hasArchive; // Ваше условие для отображения кнопки "Скачать архив" на основе полученного ответа
+      toggleDownloadButton(showDownloadButton);
+
+      // Пример вызова функции displayImages с фиктивными данными
+      var fakeLeftImages = ["D:\\Данил\\Downloads\\Daco_4925781.png", "D:\\Данил\\Downloads\\Daco_4925781.png"]; // Фиктивные URL-адреса фотографий слева
+      var fakeRightImages = ["D:\\Данил\\Downloads\\Daco_4925781.png", "D:\\Данил\\Downloads\\Daco_4925781.png"]; // Фиктивные URL-адреса фотографий справа
+      displayImages(fakeLeftImages, fakeRightImages);
+    }
+
+    // Функция для отправки формы и получения ответа с бэкенда
+    function submitForm() {
+      var form = document.getElementById("upload-form");
+      var formData = new FormData(form);
+
+      // Код для отправки формы на бэкенд и получения ответа
+      // ...
+
+      // Пример вызова функции handleResponse с фиктивным ответом
+      var fakeResponse = { hasArchive: true }; // Фиктивный ответ с бэкенда
+      handleResponse(fakeResponse);
+    }
+
+    // Инициализация формы
+    var form = document.getElementById("upload-form");
+    form.addEventListener("submit", function(event) {
+      event.preventDefault();
+      submitForm();
+    });
+  </script>
+</body>
+</html>
