@@ -41,13 +41,18 @@ if results[0].masks is not None:
 
         # Convert the mask to a binary mask
         _, mask_binary = cv2.threshold(mask, 1, 255, cv2.THRESH_BINARY)
-        
+
         # Convert the data type of img_resized and mask_binary to np.uint8
         img_resized = img_resized.astype(np.uint8)
         mask_binary = mask_binary.astype(np.uint8)
 
         # Apply the binary mask to the resized original image
         masked = cv2.bitwise_and(img_resized, img_resized, mask=mask_binary)
+
+        # Create a blank transparent image with the same size as the masked object
+        transparent = np.zeros((h2, w2, 4), dtype=np.uint8)
+        transparent[:, :, :3] = masked
+        transparent[:, :, 3] = mask_binary
 
         # Find contours of the object
         contours, _ = cv2.findContours(mask_binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -57,6 +62,7 @@ if results[0].masks is not None:
 
         # Crop the image to the bounding box of the object
         cropped = masked[y:y+h, x:x+w]
+        cropped_transparent = transparent[y:y+h, x:x+w]
 
-        # Save the cropped image
-        cv2.imwrite(f"results_{i}.png", cropped)
+        # Save the cropped image with transparency
+        cv2.imwrite(f"results_{i}.png", cropped_transparent)
