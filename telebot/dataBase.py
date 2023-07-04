@@ -1,4 +1,3 @@
-import telebot
 import psycopg2
 from datetime import datetime
 
