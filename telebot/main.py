@@ -136,7 +136,7 @@ def get_photo(message):
     bot.send_message(message.chat.id, f"Количество найденных объектов на фотографии: {len(segmented_images)}")
     for segmented_image in segmented_images:
         with open(segmented_image, 'rb') as photo:
-            msg = bot.send_photo(message.chat.id, photo, reply_markup=markup)
+            msg = bot.send_document(message.chat.id, photo, reply_markup=markup)
 
         # dataBase.db_history_save(msg.id, message.from_user.id)
     # else:
