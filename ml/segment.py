@@ -2,6 +2,16 @@ import os
 import cv2
 import numpy as np
 from ultralytics import YOLO
+import zipfile
+import os
+
+
+def create_zip_archive(directory, output_path):
+    with zipfile.ZipFile(output_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
+        for root, _, files in os.walk(directory):
+            for file in files:
+                file_path = os.path.join(root, file)
+                zipf.write(file_path, os.path.relpath(file_path, directory))
 
 def segment_image(image_path, model, photo_id):
     os.makedirs(f"./images/{photo_id}", exist_ok=True)
@@ -33,5 +43,11 @@ def segment_image(image_path, model, photo_id):
             segment_path = f"./images/{photo_id}/object_{i}.png"
             cv2.imwrite(segment_path, cropped_transparent)
             segmented_images.append(segment_path)
+            
+    res_plotted = results[0].plot()
+    cv2.imwrite(f"{photo_id}.jpg", res_plotted)
+    directory = f"./images/{photo_id}"  
+    output_path = f"{photo_id}.zip"
+    create_zip_archive(directory, output_path)
 
     return segmented_images
