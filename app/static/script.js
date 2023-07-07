@@ -8,6 +8,7 @@ function toggleMenu() {
     menu.style.display = (menu.style.display === "block") ? "none" : "block";
 }
 
+// Функция для показа/сокрытия функционала по куки
 function cookieCheck() {
     let cookies = document.cookie;
     var menu = document.getElementById("menu");
@@ -16,6 +17,23 @@ function cookieCheck() {
     }
     document.getElementById("menu-button").style.display = "block"
     document.getElementById("telegram").style.display = "none"
+    document.getElementById("container").style.display = "block"
+    checkBalance()
+}
+
+// Функция для получения куки с указанным именем
+function getCookie(name) {
+  let matches = document.cookie.match(new RegExp(
+    "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+  ));
+  return matches ? decodeURIComponent(matches[1]) : undefined;
+}
+
+// Функция для проверки и отображения баланса
+async function checkBalance(){
+    let cookies = getCookie("tg_uid")
+    let response = await fetch(`/tglogin/${cookies}`).then(x=>x.text());
+    document.getElementById("balance").textContent=response;
 }
 
 // Функция для пополнения токенов
@@ -36,10 +54,6 @@ function logout() {
         document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
         location.reload()
     }
-}
-
-function checkBalance(){
-
 }
 
 // Функция для отображения/скрытия кнопки "Скачать архив"

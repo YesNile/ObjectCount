@@ -8,6 +8,9 @@ from fastapi import APIRouter, HTTPException, status, Query
 import json
 import hmac
 import html
+from database.database_manager import db_score
+from fastapi.responses import Response
+
 
 app = FastAPI()
 
@@ -39,6 +42,14 @@ def get_link(id: int, first_name: str, last_name: Optional[str], auth_date: int,
         response.set_cookie(key="tg_uname", value=username)
         return response
     return "Error while logging in"
+
+@router.get("/{id}")
+def read_item(id):
+    return db_score(id)
+
+#
+# @router.get('/balance')
+# def get_balance()
 
 
 app.include_router(router, tags=['Telegram Login'])
