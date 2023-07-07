@@ -184,7 +184,7 @@ class Bot:
 
                 with open(image_path, "wb") as file:
                     file.write(downloaded_file)
-                segmented_images = segment_image(image_path, self.model, photo_id)
+                segmented_images = model.segment_image(image_path, self.model, photo_id)
 
                 # for segmented_image in segmented_images:
                 #     with open(segmented_image, 'rb') as photo:
