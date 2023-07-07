@@ -1,6 +1,10 @@
 //console.log(document.cookie)
 window.onload = () => cookieCheck()
 
+function toggleAdditionalButtons() {
+    var additionalButtonsContainer = document.getElementById("additional-buttons-container");
+    additionalButtonsContainer.style.display = (additionalButtonsContainer.style.display === "none") ? "block" : "none";
+}
 
 // Функция для отображения/скрытия меню
 function toggleMenu() {
@@ -37,9 +41,25 @@ async function checkBalance(){
 }
 
 // Функция для пополнения токенов
-function reloadTokens() {
+function reloadTokensVeronika() {
+    // Переадресация на профиль в Telegram
+    window.location.href = " https://t.me/+79243652878";
+    toggleAdditionalButtons()
+}
+function reloadTokensDmitry() {
     // Переадресация на профиль в Telegram
     window.location.href = "https://t.me/Jiraffeck";
+    toggleAdditionalButtons()
+}
+function reloadTokensIlya() {
+    // Переадресация на профиль в Telegram
+    window.location.href = "https://t.me/nortrow";
+    toggleAdditionalButtons()
+}
+function reloadTokensDanil() {
+    // Переадресация на профиль в Telegram
+    window.location.href = "https://t.me/IvanGroznyiA";
+    toggleAdditionalButtons()
 }
 
 

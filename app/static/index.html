@@ -33,10 +33,17 @@
 <!-- Меню -->
 <div class="bot-menu" id="bot-menu">
     <div class="menu" id="menu">
-    <div class="menu-cell">Баланс токенов: <span id="balance"></span></div>
-    <div class="menu-cell" onclick="reloadTokens()" >Пополнить токены</div>
-    <div class="menu-cell" onclick="logout()">Выйти из аккаунта</div>
-</div>
+        <div class="menu-cell">Баланс токенов: <span id="balance"></span></div>
+        <div class="menu-cell" title="Обратитесь к разработчикам в телеграм" onclick="toggleAdditionalButtons()" id="first">Пополнить токены</div>
+        <div class="additional-buttons-container" id="additional-buttons-container" style="display: none;">
+            <div class="mini-menu-cell" title="Telegram Bot" onclick="reloadTokensVeronika()">Вероника</div>
+            <div class="mini-menu-cell" title="Project Manager" onclick="reloadTokensDmitry()">Дмитрий</div>
+            <div class="mini-menu-cell" title="Computer Vision" onclick="reloadTokensIlya()">Илья</div>
+            <div class="mini-menu-cell" title="Web development" onclick="reloadTokensDanil()">Данил</div>
+        </div>
+        <div class="menu-cell" onclick="logout()">Выйти из аккаунта</div>
+
+    </div>
 </div>
 
 
