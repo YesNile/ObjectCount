@@ -3,14 +3,13 @@ from telebot import types
 from telegram_bot_calendar import DetailedTelegramCalendar, LSTEP
 from ultralytics import YOLO
 
-from database.database_manager import database
+from database import database_manager as dataBase
 from ml.process_image import SegmentationModule
 
 TOKEN = "6273302502:AAGGO3PgrLDwIG9mqwUOU-nSQ3yWuWWVtYw"
 bot = telebot.TeleBot(TOKEN)
-database = database()
 
-model = SegmentationModule(r"D:\\Projects_cv\\ObjectCount\\best_with_badges.pt'")
+model = SegmentationModule(r"D:\\Projects_cv\\ObjectCount\\best_with_badges.pt")
 
 user_id = 0
 res = []
@@ -18,7 +17,7 @@ fav = []
 
 @bot.message_handler(commands=['start'])
 def start(message):
-    database.db_connect(message.from_user.id)
+    dataBase.db_connect(message.from_user.id)
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
     item1 = types.KeyboardButton('Перейти на сайт')
     item2 = types.KeyboardButton('Получить инструкцию')
@@ -46,7 +45,7 @@ def bot_message(message):
                              'желательно снимать близко к объектам')
 
         elif message.text == 'Посмотреть счет':
-            coin = database.db_score(message.from_user.id)
+            coin = dataBase.db_score(message.from_user.id)
             bot.send_message(message.chat.id, f'На вашем счете: {coin} монет')
 
         elif message.text == 'Посмотреть историю':
@@ -61,7 +60,7 @@ def bot_message(message):
             fav.clear()
             user_id = message.from_user.id
 
-            history = database.db_favourites_view(message.from_user.id)
+            history = dataBase.db_favourites_view(message.from_user.id)
             markup = types.InlineKeyboardMarkup()
             markup.add(types.InlineKeyboardButton('Скачать архив .zip', callback_data='save'))
             markup.add(types.InlineKeyboardButton('Удалить из избранного', callback_data='delete'))
@@ -71,7 +70,7 @@ def bot_message(message):
                 fav.append(fav_mes.message_id)
 
         elif message.text == 'Назад':
-            database.db_connect(message.from_user.id)
+            dataBase.db_connect(message.from_user.id)
             markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
             item1 = types.KeyboardButton('Перейти на сайт')
             item2 = types.KeyboardButton('Получить инструкцию')
@@ -83,7 +82,7 @@ def bot_message(message):
             res.clear()
 
         elif message.text == 'За все время':
-            history = database.db_history_allview(message.from_user.id)
+            history = dataBase.db_history_allview(message.from_user.id)
             bot.send_message(message.chat.id, 'Ваша история')
             for mes in history:
                 photo_lsd = open(mes[1], 'rb')
@@ -115,7 +114,7 @@ def cal(c):
                              f"Select {LSTEP[step]}",
                              reply_markup=calendar)
     if len(res) == 2:
-        history = database.db_history_view(user_id, res)
+        history = dataBase.db_history_view(user_id, res)
         bot.send_message(c.message.chat.id, 'Ваша история')
         for mess in history:
             photo_lsd = open(mess[1], 'rb')
@@ -126,7 +125,7 @@ def cal(c):
 @bot.message_handler(content_types=['photo'])
 def get_photo(message):
     markup = types.InlineKeyboardMarkup()
-    if database.db_coins(message.from_user.id):
+    if dataBase.db_coins(message.from_user.id):
 
         item1 = types.InlineKeyboardButton('Скачать архив .zip', callback_data='save')
         item2 = types.InlineKeyboardButton('👍', callback_data='like')
@@ -148,7 +147,7 @@ def get_photo(message):
 
         photo_lsd = open(image_path, 'rb')
         msg = bot.send_photo(message.chat.id, photo_lsd, f"Количество найденных объектов на фотографии: {len(segmented_images)}", reply_markup=markup)
-        database.db_history_save(msg.id, message.from_user.id, image_path, f"Количество найденных объектов на фотографии: {len(segmented_images)}")
+        dataBase.db_history_save(msg.id, message.from_user.id, image_path, f"Количество найденных объектов на фотографии: {len(segmented_images)}")
     else:
         markup.add(types.InlineKeyboardButton('Написать администратору', url='https://t.me/Jiraffeck'))
         bot.send_message(message.chat.id, 'Упс! Ваш лимит закончился. Обратитесь к администратору для пополнения счета.',
@@ -158,37 +157,37 @@ def get_photo(message):
 @bot.callback_query_handler(func=lambda callback: True)
 def callback_message(callback):
     global user_id
-    image = database.db_message_photo(callback.message.message_id)
+    image = dataBase.db_message_photo(callback.message.message_id)
     if callback.message:
         if callback.data == 'save':
             if image:
                 file = open(fr"{image[0][1].split('.')[0]}.zip", 'rb')
             else:
-                history = database.db_favourites_view(user_id)
+                history = dataBase.db_favourites_view(user_id)
                 i = fav.index(callback.message.message_id)
                 file = open(fr"{history[i][1].split('.')[0]}.zip", 'rb')
             bot.send_document(callback.message.chat.id, file)
 
         elif callback.data == 'favourites':
-            database.db_favourites_update(True, image[0][1])
+            dataBase.db_favourites_update(True, image[0][1])
             bot.send_message(callback.message.chat.id, 'Добавленно в избранное.')
 
         elif callback.data == 'delete':
-            history = database.db_favourites_view(user_id)
+            history = dataBase.db_favourites_view(user_id)
             i = fav.index(callback.message.message_id)
             fav.remove(fav[i])
-            database.db_favourites_update(False, history[i][1])
+            dataBase.db_favourites_update(False, history[i][1])
             bot.delete_message(callback.message.chat.id, callback.message.message_id)
             bot.send_message(callback.message.chat.id, 'Удалено из избранного.')
 
         if image:
             if image[0][2] is None:
                 if callback.data == 'like':
-                    database.db_estimation(True, callback.message.message_id)
+                    dataBase.db_estimation(True, callback.message.message_id)
                     bot.send_message(callback.message.chat.id, 'Спасибо за ваш голос!')
 
                 elif callback.data == 'dislike':
-                    database.db_estimation(False, callback.message.message_id)
+                    dataBase.db_estimation(False, callback.message.message_id)
                     bot.send_message(callback.message.chat.id, 'Спасибо за ваш голос! Мы обязательно исправим все недочеты в будущем!')
 
 
