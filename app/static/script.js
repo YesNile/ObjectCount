@@ -1,4 +1,6 @@
-console.log(document.cookie)
+//console.log(document.cookie)
+window.onload = () => cookieCheck()
+
 
 // Функция для отображения/скрытия меню
 function toggleMenu() {
@@ -6,14 +8,22 @@ function toggleMenu() {
     menu.style.display = (menu.style.display === "block") ? "none" : "block";
 }
 
+function cookieCheck() {
+    let cookies = document.cookie;
+    var menu = document.getElementById("menu");
+    if (cookies === "" || cookies.search('token=[a-zA-Z0-9]{64}') === -1) {
+        return
+    }
+    document.getElementById("menu-button").style.display = "block"
+    document.getElementById("telegram").style.display = "none"
+}
+
 // Функция для пополнения токенов
 function reloadTokens() {
-  var message = "Для пополнения токенов обратитесь к администратору в телеграм";
-  var adminTelegramLink = "https://t.me/Jiraffeck";
-
-  // Открытие окна с сообщением и ссылкой на профиль администратора
-  window.alert(message + "\n\n" + adminTelegramLink);
+    // Переадресация на профиль в Telegram
+    window.location.href = "https://t.me/Jiraffeck";
 }
+
 
 // Функция для выхода из аккаунта
 function logout() {
@@ -24,7 +34,12 @@ function logout() {
         const eqPos = cookie.indexOf("=");
         const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
         document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+        location.reload()
     }
+}
+
+function checkBalance(){
+
 }
 
 // Функция для отображения/скрытия кнопки "Скачать архив"

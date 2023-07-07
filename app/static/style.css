@@ -67,11 +67,9 @@ input[type=submit]:hover {
 .telegram-widget-container{
     position: fixed;
     top: 20px;
-    right: 20px;
-    width: 20px;
-    height: 20px;
-    background-color: #4CAF50;
-    color: white;
+    right: 5px;
+    width: 200px;
+    height: 200px;
     border: none;
     border-radius: 50%;
     cursor: pointer;
@@ -91,6 +89,7 @@ input[type=submit]:hover {
     border-radius: 50%;
     cursor: pointer;
     z-index: 999;
+    display: none;
 }
 
 /* Стили для меню */

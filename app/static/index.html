@@ -6,15 +6,16 @@
     <script type="text/javascript" src="script.js" defer></script>
 </head>
 <body>
-<div class="telegram-widget-container">
-    <script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-login="ObjectCounterBot"
-            data-size="medium" data-auth-url="/tglogin/" data-request-access="write"></script>
-</div>
 <h1>Привет, Давай распознаем твои объекты?</h1>
 <h2>Наш проект представляет собой веб-приложение, которое позволяет пользователям загружать фотографии для обработки с
     использованием компьютерного зрения. После загрузки фото, наше приложение применяет алгоритмы компьютерного зрения
     для выделения объектов на изображении. В ответ вы получите количество объектов и все их мы вырежем в отдельное
     изображение без фона.</h2>
+
+<div class="telegram-widget-container" style="display: block" id="telegram">
+    <script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-login="ObjectCounterBot"
+            data-size="medium" data-auth-url="/tglogin/" data-request-access="write"></script>
+</div>
 <div class="container">
     <form id="upload-form" action="/upload" method="post" enctype="multipart/form-data">
         <label for="image">Выберите изображение:</label>
@@ -27,14 +28,17 @@
 </div>
 
 <!-- Кнопка в углу экрана -->
-<button class="menu-button" onclick="toggleMenu()"></button>
+<button class="menu-button" onclick="toggleMenu()" id="menu-button"></button>
 
 <!-- Меню -->
-<div class="menu" id="menu">
+<div class="bot-menu" id="bot-menu">
+    <div class="menu" id="menu">
     <div class="menu-cell">Баланс токенов: <span id="balance">0</span></div>
-    <div class="menu-cell" onclick="reloadTokens()">Пополнить токены</div>
+    <div class="menu-cell" onclick="reloadTokens()" >Пополнить токены</div>
     <div class="menu-cell" onclick="logout()">Выйти из аккаунта</div>
 </div>
+</div>
+
 
 <!-- Подвал -->
 <div class="footer">
