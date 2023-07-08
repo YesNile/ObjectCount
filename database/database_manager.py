@@ -40,13 +40,13 @@ def db_score(user_id):
     con.close()
 
 
-def db_history_save(message_id, user_id, image_path, message_text):
+def db_history_save(message_id, user_id, image_path, message_text,zip_path):
     con = psycopg2.connect(host="127.0.0.1", user="postgres", password="1234", database="telegramBot", port="5432")
     cur = con.cursor()
     cur.execute(
-        "INSERT INTO req_history (id_message, id_users, message_text, message_pictures, date_mes) VALUES (%s, %s, %s, %s, %s)",
+        "INSERT INTO req_history (id_message, id_users, message_text, message_pictures, date_mes,zip_path) VALUES (%s, %s, %s, %s, %s,%s)",
         (message_id, user_id, message_text, image_path,
-         datetime.now().date()))
+         datetime.now().date(), zip_path))
     con.commit()
 
     print('добавленно в историю')

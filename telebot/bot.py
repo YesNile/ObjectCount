@@ -2,6 +2,8 @@ import telebot
 from telebot import types
 from telegram_bot_calendar import DetailedTelegramCalendar, LSTEP
 from ultralytics import YOLO
+from os import path
+
 
 from database import database_manager as dataBase
 from ml.process_image import SegmentationModule
@@ -54,7 +56,7 @@ def bot_message(message):
             item2 = types.KeyboardButton('Ввести самостоятельно')
             item3 = types.KeyboardButton('Назад')
             markup.add(item1, item2, item3)
-            bot.send_message(message.chat.id, f'Выберете период: ', reply_markup=markup)
+            bot.send_message(message.chat.id, f'Выберите период: ', reply_markup=markup)
 
         elif message.text == 'Посмотреть избранное':
             fav.clear()
@@ -140,14 +142,15 @@ def get_photo(message):
         file_path = file_info.file_path
         downloaded_file = bot.download_file(file_path)
         image_path = fr"../images/{photo_id}.jpg"
+        zip_path = rf"../images/{photo_id}.zip"
 
         with open(image_path, 'wb') as file:
             file.write(downloaded_file)
-        segmented_images = model.segment_image(image_path, model, photo_id)
+        segmented_images = model.segment_image(image_path, photo_id)
 
         photo_lsd = open(image_path, 'rb')
         msg = bot.send_photo(message.chat.id, photo_lsd, f"Количество найденных объектов на фотографии: {len(segmented_images)}", reply_markup=markup)
-        dataBase.db_history_save(msg.id, message.from_user.id, image_path, f"Количество найденных объектов на фотографии: {len(segmented_images)}")
+        dataBase.db_history_save(msg.id, message.from_user.id, image_path, f"Количество найденных объектов на фотографии: {len(segmented_images)}", zip_path)
     else:
         markup.add(types.InlineKeyboardButton('Написать администратору', url='https://t.me/Jiraffeck'))
         bot.send_message(message.chat.id, 'Упс! Ваш лимит закончился. Обратитесь к администратору для пополнения счета.',
@@ -161,11 +164,11 @@ def callback_message(callback):
     if callback.message:
         if callback.data == 'save':
             if image:
-                file = open(fr"{image[0][1].split('.')[0]}.zip", 'rb')
+                file = open(fr"{path.splitext(image[0][1])[0]}.zip", 'rb')
             else:
                 history = dataBase.db_favourites_view(user_id)
                 i = fav.index(callback.message.message_id)
-                file = open(fr"{history[i][1].split('.')[0]}.zip", 'rb')
+                file = open(fr"{path.splitext(history[i][1])[0]}.zip", 'rb')
             bot.send_document(callback.message.chat.id, file)
 
         elif callback.data == 'favourites':
