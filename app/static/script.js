@@ -6,24 +6,53 @@ function toggleAdditionalButtons() {
     additionalButtonsContainer.style.display = (additionalButtonsContainer.style.display === "none") ? "block" : "none";
 }
 
+// Определение сценариев и соответствующих сообщений
+var scenarios = {
+    scenario1: "Текст для сценария 1",
+    scenario2: "Текст для сценария 2",
+    scenario3: "Текст для сценария 3"
+};
+
+// Функция для отображения окна диалога с заданным текстом
+function showDialog(scenario) {
+    var dialogWindow = document.getElementById("dialog-window");
+    var dialogContent = document.getElementById("dialog-content");
+    dialogContent.textContent = scenarios[scenario];
+    dialogWindow.style.display = "block";
+}
+
+// Пример вызова функции для отображения сценария 1
+
+
+// Функция для показа инструкции
+function showInstructions() {
+    var message = "Я обучен распознаванию порядка 25 различных объектов.\n\n" +
+        "Для удовлетворительного результата нужна фотография в хорошем качестве, " +
+        "на контрастном для объектов фоне, желательно снимать близко к объектам.";
+
+    window.alert(message);
+}
+
+
 // Функция для отображения/скрытия меню
 function toggleMenu() {
     var menu = document.getElementById("menu");
     menu.style.display = (menu.style.display === "block") ? "none" : "block";
+    //showDialog("scenario1");
 }
 
 // Функция для показа/сокрытия функционала по куки
-function cookieCheck() {
-    let cookies = document.cookie;
-    var menu = document.getElementById("menu");
-    if (cookies === "" || cookies.search('token=[a-zA-Z0-9]{64}') === -1) {
-        return
-    }
-    document.getElementById("menu-button").style.display = "block"
-    document.getElementById("telegram").style.display = "none"
-    document.getElementById("container").style.display = "block"
-    checkBalance()
-}
+// function cookieCheck() {
+//     let cookies = document.cookie;
+//     var menu = document.getElementById("menu");
+//     if (cookies === "" || cookies.search('token=[a-zA-Z0-9]{64}') === -1) {
+//         return
+//     }
+//     document.getElementById("menu-button").style.display = "block"
+//     document.getElementById("telegram").style.display = "none"
+//     document.getElementById("container").style.display = "block"
+//     checkBalance()
+// }
 
 // Функция для получения куки с указанным именем
 function getCookie(name) {

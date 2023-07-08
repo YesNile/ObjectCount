@@ -9,7 +9,7 @@ from ml.process_image import SegmentationModule
 TOKEN = "6273302502:AAGGO3PgrLDwIG9mqwUOU-nSQ3yWuWWVtYw"
 bot = telebot.TeleBot(TOKEN)
 
-model = SegmentationModule(r"D:\\Projects_cv\\ObjectCount\\best_with_badges.pt")
+model = SegmentationModule(r"../best_with_badges.pt")
 
 user_id = 0
 res = []
@@ -139,7 +139,7 @@ def get_photo(message):
         file_info = bot.get_file(photo_id)
         file_path = file_info.file_path
         downloaded_file = bot.download_file(file_path)
-        image_path = fr"D:\Projects_cv\ObjectCount\images\{photo_id}.jpg"
+        image_path = fr"../images/{photo_id}.jpg"
 
         with open(image_path, 'wb') as file:
             file.write(downloaded_file)

@@ -2,8 +2,8 @@
 <html>
 <head>
     <title>ObjectCount</title>
-    <link rel="stylesheet" type="text/css" href="style.css">
-    <script type="text/javascript" src="script.js" defer></script>
+    <link rel="stylesheet" type="text/css" href="../static/style.css">
+    <script type="text/javascript" src="../static/script.js" defer></script>
 </head>
 <body>
 <h1>Привет, Давай распознаем твои объекты?</h1>
@@ -11,16 +11,31 @@
     использованием компьютерного зрения. После загрузки фото, наше приложение применяет алгоритмы компьютерного зрения
     для выделения объектов на изображении. В ответ вы получите количество объектов и все их мы вырежем в отдельное
     изображение без фона.</h2>
-
-<div class="telegram-widget-container" style="display: block" id="telegram">
-    <script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-login="ObjectCounterBot"
-            data-size="medium" data-auth-url="/tglogin/" data-request-access="write"></script>
 </div>
-<div class="container" style="display: none" id="container">
+<div class="container" style="display: block" id="container">
+    <div id="dialog-window">
+        <div id="dialog-content"></div>
+    </div>
     <form id="upload-form" action="/upload" method="post" enctype="multipart/form-data">
         <label for="image">Выберите изображение:</label>
         <input type="file" id="image" name="image" accept="image/jpeg, image/png" required>
         <input type="submit" value="Загрузить">
+    </form>
+    <form action="/history" method="GET">
+        <select name="date_from">
+            {% for date in dates %}
+            <option>{{date[0]}}</option>
+            {% endfor %}
+        </select>
+
+        <select name="date_to">
+            {% for date in dates %}
+            <option>{{date[0]}}</option>
+            {% endfor %}
+        </select>
+
+        <input type="submit">
+
     </form>
     <div id="left-images-container"></div>
     <a id="download-link" href="#" download class="download-button">Скачать архив</a>
@@ -34,14 +49,20 @@
 <div class="bot-menu" id="bot-menu">
     <div class="menu" id="menu">
         <div class="menu-cell">Баланс токенов: <span id="balance"></span></div>
-        <div class="menu-cell" title="Обратитесь к разработчикам в телеграм" onclick="toggleAdditionalButtons()" id="first">Пополнить токены</div>
+        <div class="menu-cell" title="Обратитесь к разработчикам в телеграм" onclick="toggleAdditionalButtons()"
+             id="first">Пополнить токены
+        </div>
         <div class="additional-buttons-container" id="additional-buttons-container" style="display: none;">
             <div class="mini-menu-cell" title="Telegram Bot" onclick="reloadTokensVeronika()">Вероника</div>
             <div class="mini-menu-cell" title="Project Manager" onclick="reloadTokensDmitry()">Дмитрий</div>
             <div class="mini-menu-cell" title="Computer Vision" onclick="reloadTokensIlya()">Илья</div>
             <div class="mini-menu-cell" title="Web development" onclick="reloadTokensDanil()">Данил</div>
         </div>
-        <div class="menu-cell" onclick="logout()">Выйти из аккаунта</div>
+        <div class="menu-cell">
+            <a href="/logout">
+                Выйти из аккаунта
+            </a>
+        </div>
 
     </div>
 </div>
@@ -51,7 +72,7 @@
 <div class="footer">
     <span class="footer-text">Наш бот в телеграм</span>
     <a href="https://t.me/ObjectCounterBot">
-        <img class="telegram-icon" src="Daco_4925781.png" alt="Telegram">
+        <img class="telegram-icon" src="../static/Daco_4925781.png" alt="Telegram">
     </a>
 </div>
 </body>

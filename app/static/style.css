@@ -89,7 +89,6 @@ input[type=submit]:hover {
     border-radius: 50%;
     cursor: pointer;
     z-index: 999;
-    display: none;
 }
 
 /* Стили для меню */
@@ -125,7 +124,6 @@ input[type=submit]:hover {
     text-align: center;
 }
 
-
 .mini-menu-cell {
     padding: 10px;
     margin-bottom: 10px;
@@ -141,6 +139,27 @@ input[type=submit]:hover {
 .mini-menu-cell:hover {
     background-color: #1C3A58;
 }
+
+#dialog-window {
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1000px;
+    height: 50px;
+    padding: 20px;
+    background-color: #1C3A58;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+#dialog-content {
+    text-align: center;
+    line-height: 1.5;
+}
+
+
+
 
 /* Стили для подвала */
 .footer {
