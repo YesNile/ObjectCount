@@ -126,14 +126,20 @@ def admin_page(request:Request):
             {"request": request,"check_admin":check_admin},
         )
 
-#
-# @router.get('/balance')
-# def get_balance()
+@app.get("/images")
+def image_container(request:Request):
+    telegram_token = request.cookies.get('token')
+    telegram_id = request.cookies.get('tg_uid')
+    if telegram_id is None and telegram_token is None:
+        return RedirectResponse('/')
+    else:
+        return RedirectResponse('/history')
 
 
 app.include_router(router, tags=['Telegram Login'])
 
 app.mount("/static", StaticFiles(directory="static", html=True), name="static")
+app.mount("/images",StaticFiles(directory="../images"),name="images")
 
 if __name__ == '__main__':
     uvicorn.run(
