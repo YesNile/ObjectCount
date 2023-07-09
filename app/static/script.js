@@ -33,6 +33,9 @@ function checkResponce(event) {
     img.src = mask;
     document.querySelector('#container').appendChild(img)
 
+    var objects = message.split(';')[2]
+    window.alert(objects)
+
     form.addEventListener("click", function (checker) {
         const save = document.createElement("a");
         save.href =zip_path;

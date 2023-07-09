@@ -22,7 +22,7 @@ def connect_to_web(path, a):
     web_work = test.segment_image(image_path=path, photo_id=str(a))
     message = f"Количество найденных объектов на фотографии: {len(web_work[0])}"
     update_zip_path(path,message, web_work[1])
-    return (web_work[1],web_work[2])
+    return (web_work[1],web_work[2],message)
 
 
 class SegmentationModule:
