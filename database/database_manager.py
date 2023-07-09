@@ -122,7 +122,7 @@ def db_estimation(bo, message_id):
 def db_message_photo(message_id):
     con = psycopg2.connect(host="127.0.0.1", user="postgres", password="1234", database="telegramBot", port="5432")
     cur = con.cursor()
-    cur.execute("SELECT message_text, message_pictures, estimation FROM req_history WHERE id_message = %s",
+    cur.execute("SELECT message_text, message_pictures, estimation, zip_path FROM req_history WHERE id_message = %s",
                 (message_id,))
     ls = cur.fetchall()
     con.close()

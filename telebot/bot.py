@@ -234,7 +234,7 @@ def callback_message(callback):
     image = dataBase.db_message_photo(callback.message.message_id)
     if callback.message:
         if callback.data == 'save':
-            file = open(fr"{image[0][1].split('.')[0]}.zip", 'rb')
+            file = open(fr"{image[0][3]}", 'rb')
             bot.send_document(callback.message.chat.id, file)
 
         elif callback.data == 'favourites':
