@@ -1,6 +1,9 @@
 import telebot
 from telebot import types
 from telegram_bot_calendar import DetailedTelegramCalendar, LSTEP
+from collections import Counter
+import matplotlib.pyplot as plt
+import random
 from ultralytics import YOLO
 
 from database import database_manager as dataBase
@@ -13,42 +16,60 @@ model = SegmentationModule(r"D:\\Projects_cv\\ObjectCount\\best_with_badges.pt")
 
 user_id = 0
 res = []
-fav = []
+
 
 @bot.message_handler(commands=['start'])
 def start(message):
-    dataBase.db_connect(message.from_user.id)
+    dataBase.db_connect(message.from_user.id, message.from_user.full_name)
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
-    item1 = types.KeyboardButton('Перейти на сайт')
-    item2 = types.KeyboardButton('Получить инструкцию')
-    item3 = types.KeyboardButton('Посмотреть счет')
-    item4 = types.KeyboardButton('Посмотреть историю')
-    item5 = types.KeyboardButton('Посмотреть избранное')
+    item1 = types.KeyboardButton('Сайт')
+    item2 = types.KeyboardButton('Инструкция')
+    item3 = types.KeyboardButton('Баланс')
+    item4 = types.KeyboardButton('История')
+    item5 = types.KeyboardButton('Избранное')
     markup.add(item1, item2, item3, item4, item5)
-    bot.send_message(message.chat.id, 'Привет, {0.first_name}!\n Загрузи фотографию с объектами, которые обычно лежат '
-                                      'на твоем столе, и узнай сколько предметов одной категории на ней '
-                                      'присутствует'.format(message.from_user), reply_markup=markup)
+    bot.send_message(message.chat.id, 'Привет, {0.first_name}!\nГотов узнать больше о предметах на твоем столе? '
+                                      'Просто сделай фото и отправь мне, а я скажу, сколько предметов и какой '
+                                      'категории они принадлежат.'.format(message.from_user), reply_markup=markup)
+
+
+@bot.message_handler(commands=['admin'])
+def start(message):
+    if dataBase.db_admin(message.from_user.id):
+        markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
+        item1 = types.KeyboardButton('Пополнить баланс')
+        item2 = types.KeyboardButton('Посмотреть активность')
+        item3 = types.KeyboardButton('Посмотреть статистику пользователей')
+        markup.add(item1, item2, item3)
+        bot.send_message(message.chat.id, 'Привет админ! Что привело тебя сюда?', reply_markup=markup)
+    else:
+        bot.send_message(message.chat.id, 'В доступе отказано')
+
 
 @bot.message_handler(content_types=['text'])
 def bot_message(message):
     global user_id
     if message.chat.type == 'private':
-        if message.text == 'Перейти на сайт':
+        if message.text == 'Сайт':
             markup = types.InlineKeyboardMarkup()
             markup.add(types.InlineKeyboardButton('Перейти на сайт', url='https://www.google.ru/'))
             bot.reply_to(message, 'Нажмите, для перехода на сайт', reply_markup=markup)
 
-        elif message.text == 'Получить инструкцию':
+        elif message.text == 'Инструкция':
             bot.send_message(message.chat.id,
                              'Я обучен распознаванию порядка 25 различных объектов. Для удовлетворительного '
                              'результата нужна фотография в хорошем качестве, на контрастном для объектов фоне, '
                              'желательно снимать близко к объектам')
 
-        elif message.text == 'Посмотреть счет':
+        elif message.text == 'Баланс':
             coin = dataBase.db_score(message.from_user.id)
-            bot.send_message(message.chat.id, f'На вашем счете: {coin} монет')
+            admins = ['https://t.me/Jiraffeck', 'https://t.me/nortrow', 'https://t.me/IvanGroznyiA']
+            admin = random.choice(admins)
+            markup = types.InlineKeyboardMarkup()
+            markup.add(types.InlineKeyboardButton('Написать администратору', url= admin))
+            bot.send_message(message.chat.id, f'На вашем счете: {coin} токенов', reply_markup=markup)
 
-        elif message.text == 'Посмотреть историю':
+        elif message.text == 'История':
             markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
             item1 = types.KeyboardButton('За все время')
             item2 = types.KeyboardButton('Ввести самостоятельно')
@@ -56,10 +77,8 @@ def bot_message(message):
             markup.add(item1, item2, item3)
             bot.send_message(message.chat.id, f'Выберете период: ', reply_markup=markup)
 
-        elif message.text == 'Посмотреть избранное':
-            fav.clear()
+        elif message.text == 'Избранное':
             user_id = message.from_user.id
-
             history = dataBase.db_favourites_view(message.from_user.id)
             markup = types.InlineKeyboardMarkup()
             markup.add(types.InlineKeyboardButton('Скачать архив .zip', callback_data='save'))
@@ -67,16 +86,15 @@ def bot_message(message):
             for mes in history:
                 photo_lsd = open(mes[1], 'rb')
                 fav_mes = bot.send_photo(message.chat.id, photo_lsd, mes[0], reply_markup=markup)
-                fav.append(fav_mes.message_id)
+                dataBase.db_favourites_mes(fav_mes.message_id, mes[1])
 
         elif message.text == 'Назад':
-            dataBase.db_connect(message.from_user.id)
             markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
-            item1 = types.KeyboardButton('Перейти на сайт')
-            item2 = types.KeyboardButton('Получить инструкцию')
-            item3 = types.KeyboardButton('Посмотреть счет')
-            item4 = types.KeyboardButton('Посмотреть историю')
-            item5 = types.KeyboardButton('Посмотреть избранное')
+            item1 = types.KeyboardButton('Сайт')
+            item2 = types.KeyboardButton('Инструкция')
+            item3 = types.KeyboardButton('Баланс')
+            item4 = types.KeyboardButton('История')
+            item5 = types.KeyboardButton('Избранное')
             markup.add(item1, item2, item3, item4, item5)
             bot.send_message(message.chat.id, 'Продолжим', reply_markup=markup)
             res.clear()
@@ -93,6 +111,57 @@ def bot_message(message):
             calendar, step = DetailedTelegramCalendar().build()
             bot.send_message(message.chat.id, f"Select {LSTEP[step]}", reply_markup=calendar)
             user_id = message.from_user.id
+        # ---------------------------------------------------------------------------------------------------
+        elif message.text == 'Посмотреть активность':
+            if dataBase.db_admin(message.from_user.id):
+                dates = dataBase.db_admin_activity()
+                array = Counter(dates)
+                c, d, text = [], [], []
+                for day in sorted(set(dates)):
+                    c.append(array[day])
+                    d.append(f'{day[0]}')
+                fig = plt.figure()
+                plt.plot(d, c)
+                fig.savefig('saved_figure.png')
+                photo_lsd = open('saved_figure.png', 'rb')
+                bot.send_photo(message.chat.id, photo_lsd, 'Активкность ')
+
+        elif message.text == 'Посмотреть статистику пользователей':
+            if dataBase.db_admin(message.from_user.id):
+                dates = dataBase.db_admin_users()
+                array = Counter(dates)
+                c, d, text = [], [], []
+                for day in sorted(set(dates)):
+                    c.append(array[day])
+                    d.append(f'{day[0]}')
+                fig = plt.figure()
+                plt.plot(d, c)
+                fig.savefig('saved_figure.png')
+                photo_lsd = open('saved_figure.png', 'rb')
+                bot.send_photo(message.chat.id, photo_lsd, 'Статистика ')
+
+        elif message.text == 'Пополнить баланс':
+            if dataBase.db_admin(message.from_user.id):
+                mesg = bot.send_message(message.chat.id, 'Введите имя пользователя')
+                bot.register_next_step_handler(mesg, test)
+
+
+def test(message):
+    ls = dataBase.db_admin_username(message.text)
+    print(ls, ' ', message.text)
+    if ls:
+        mesg = bot.send_message(message.chat.id, 'Введите количесво монет')
+        bot.register_next_step_handler(mesg, coin, message.text)
+    else:
+        bot.send_message(message.chat.id, 'Пользователя с таким именем не существует!')
+
+
+def coin(message, user_name):
+    if (message.text).isdigit():
+        dataBase.db_admin_coins(message.text, user_name)
+        bot.send_message(message.chat.id, 'Монеты добавлены')
+    else:
+        bot.send_message(message.chat.id, 'Введите целое число')
 
 
 @bot.callback_query_handler(func=DetailedTelegramCalendar.func())
@@ -143,14 +212,18 @@ def get_photo(message):
 
         with open(image_path, 'wb') as file:
             file.write(downloaded_file)
-        segmented_images = model.segment_image(image_path, model, photo_id)
+        segmented_images = model.segment_image(image_path, photo_id)
 
         photo_lsd = open(image_path, 'rb')
-        msg = bot.send_photo(message.chat.id, photo_lsd, f"Количество найденных объектов на фотографии: {len(segmented_images)}", reply_markup=markup)
-        dataBase.db_history_save(msg.id, message.from_user.id, image_path, f"Количество найденных объектов на фотографии: {len(segmented_images)}")
+        msg = bot.send_photo(message.chat.id, photo_lsd,
+                             f"Количество найденных объектов на фотографии: {len(segmented_images)}",
+                             reply_markup=markup)
+        dataBase.db_history_save(msg.id, message.from_user.id, image_path,
+                                 f"Количество найденных объектов на фотографии: {len(segmented_images)}")
     else:
         markup.add(types.InlineKeyboardButton('Написать администратору', url='https://t.me/Jiraffeck'))
-        bot.send_message(message.chat.id, 'Упс! Ваш лимит закончился. Обратитесь к администратору для пополнения счета.',
+        bot.send_message(message.chat.id,
+                         'Упс! Ваш лимит закончился. Обратитесь к администратору для пополнения счета.',
                          reply_markup=markup)
 
 
@@ -160,12 +233,7 @@ def callback_message(callback):
     image = dataBase.db_message_photo(callback.message.message_id)
     if callback.message:
         if callback.data == 'save':
-            if image:
-                file = open(fr"{image[0][1].split('.')[0]}.zip", 'rb')
-            else:
-                history = dataBase.db_favourites_view(user_id)
-                i = fav.index(callback.message.message_id)
-                file = open(fr"{history[i][1].split('.')[0]}.zip", 'rb')
+            file = open(fr"{image[0][1].split('.')[0]}.zip", 'rb')
             bot.send_document(callback.message.chat.id, file)
 
         elif callback.data == 'favourites':
@@ -174,11 +242,11 @@ def callback_message(callback):
 
         elif callback.data == 'delete':
             history = dataBase.db_favourites_view(user_id)
-            i = fav.index(callback.message.message_id)
-            fav.remove(fav[i])
-            dataBase.db_favourites_update(False, history[i][1])
-            bot.delete_message(callback.message.chat.id, callback.message.message_id)
-            bot.send_message(callback.message.chat.id, 'Удалено из избранного.')
+            for fav in history:
+                if fav[2] == callback.message.message_id:
+                    dataBase.db_favourites_update(False, fav[1])
+                    bot.delete_message(callback.message.chat.id, callback.message.message_id)
+                    bot.send_message(callback.message.chat.id, 'Удалено из избранного.')
 
         if image:
             if image[0][2] is None:
@@ -188,9 +256,8 @@ def callback_message(callback):
 
                 elif callback.data == 'dislike':
                     dataBase.db_estimation(False, callback.message.message_id)
-                    bot.send_message(callback.message.chat.id, 'Спасибо за ваш голос! Мы обязательно исправим все недочеты в будущем!')
-
-
+                    bot.send_message(callback.message.chat.id,
+                                     'Спасибо за ваш голос! Мы обязательно исправим все недочеты в будущем!')
 
 
 bot.polling(none_stop=True)
