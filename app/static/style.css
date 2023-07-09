@@ -33,7 +33,7 @@ h2 {
 
 /* Стили для макета страницы */
 .container {
-    max-width: 600px;
+    max-width: 1500px;
     margin: 0 auto;
     padding-top: 100px;
 }
@@ -64,10 +64,73 @@ input[type=submit] {
 input[type=submit]:hover {
     background-color: #45a049;
 }
-.telegram-widget-container{
+
+/*Стили для окна диалога на странице авторизации*/
+#dialog-window-index {
+    position: absolute;
+    top: 15%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 450px;
+    height: 400px;
+    padding: 20px;
+    background-color: #1C3A58;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/*#dialog-window-index {*/
+/*  position: relative;*/
+/*  width: 500px;*/
+/*  height: 500px;*/
+/*  padding: 20px;*/
+/*  background-color: #1C3A58;*/
+/*  border-radius: 8px;*/
+/*  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);*/
+/*}*/
+
+/*Стили для диалогового пузыря*/
+#dialog-window-index::before {
+  content: "";
+  position: absolute;
+  bottom: -15px;
+  left: -15px;
+  width: 0;
+  height: 0;
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-top: 30px solid #1C3A58;
+  border-bottom-left-radius: 8px;
+  transform: rotate(45deg);
+}
+
+.hello-text {
+  margin-top: 100px;
+}
+
+
+/*Стили для контента в окне диалога на странице авторизации*/
+#dialog-content {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+
+/*Стили для робота на странице авторизации*/
+#custom-image {
+  position: absolute;
+  top: 400px;
+  left: -180px;
+  width: 150px; /* Размер картинки */
+  height: 150px;
+}
+
+/*Стили для виджета авторизации телеграм*/
+.telegram-widget-container {
     position: fixed;
-    top: 20px;
-    right: 5px;
+    top: 300px;
+    left: 30%;
     width: 200px;
     height: 200px;
     border: none;
@@ -117,7 +180,8 @@ input[type=submit]:hover {
 .menu-cell:hover {
     background-color: #1C3A58;
 }
-.additional-buttons-container{
+
+.additional-buttons-container {
     margin-top: 10px;
     display: none;
     white-space: normal;
@@ -140,25 +204,68 @@ input[type=submit]:hover {
     background-color: #1C3A58;
 }
 
+.user-menu-cell {
+    padding: 10px;
+    margin-bottom: 10px;
+    left: -1000px;
+    background-color: #112437;
+    border-radius: 4px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 12px;
+    width: 150px;
+    margin-left: auto;
+}
+
+.user-menu-cell:hover {
+    background-color: #1C3A58;
+}
+
 #dialog-window {
     position: absolute;
-    top: 25%;
-    left: 50%;
+    top: 27%;
+    left: 40%;
     transform: translateX(-50%);
-    width: 1000px;
-    height: 50px;
+    width: 450px;
+    height: 400px;
     padding: 20px;
     background-color: #1C3A58;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
+#dialog-window::before {
+  content: "";
+  position: absolute;
+  bottom: -15px;
+  left: -15px;
+  width: 0;
+  height: 0;
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-top: 30px solid #1C3A58;
+  border-bottom-left-radius: 8px;
+  transform: rotate(45deg);
+}
+
+.hello-text {
+  margin-top: 100px;
+}
+
+/*Стили для робота на странице авторизации*/
+#custom-image {
+  position: absolute;
+  top: 400px;
+  left: -180px;
+  width: 150px; /* Размер картинки */
+  height: 150px;
+}
+
+
 #dialog-content {
     text-align: center;
     line-height: 1.5;
 }
-
-
 
 
 /* Стили для подвала */

@@ -130,3 +130,12 @@ def db_admin(user_id):
     ls = cur.fetchall()
     con.close()
     return ls
+
+def update_zip_path(user_id,message,path):
+    con = psycopg2.connect(host="127.0.0.1", user="postgres", password="1234", database="telegramBot", port="5432")
+    cur = con.cursor()
+    cur.execute("UPDATE req_history set zip_path = %s, message_text = %s WHERE message_pictures = %s", (path,message,user_id))
+    con.commit()
+    print('update zip path')
+    con.close()
+

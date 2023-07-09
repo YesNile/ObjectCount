@@ -1,10 +1,17 @@
+import os
+import uuid
+from datetime import datetime
+from random import randint
+from time import sleep
+
 import uvicorn
-from fastapi import FastAPI
+from celery.result import AsyncResult
+from fastapi import FastAPI, File, UploadFile
 from fastapi.staticfiles import StaticFiles
 from hashlib import sha256
 from typing import Optional
 from fastapi.responses import RedirectResponse
-from fastapi import APIRouter, HTTPException, status, Query
+from fastapi import APIRouter,WebSocket, HTTPException, status, Query
 import json
 import hmac
 import html
@@ -16,10 +23,17 @@ from fastapi.responses import Response
 import jinja2
 from fastapi.templating import Jinja2Templates
 from fastapi import Request
+from fastapi import BackgroundTasks
+from celery import Celery
+
 from database.database_manager import db_history_allview
 from database.database_manager import db_history_view
 from database.database_manager import db_receive_date
 from database.database_manager import db_admin
+from database.database_manager import db_history_save
+
+from ml.process_image import SegmentationModule
+from ml.process_image import connect_to_web
 
 app = FastAPI()
 
@@ -81,10 +95,12 @@ def main_page(request: Request):
         return RedirectResponse('/')
     else:
         dates = db_receive_date(telegram_id)
+        balance = db_score(telegram_id)
         return templates.TemplateResponse(
             "user.html",
             {"request": request,
-             "dates": dates},
+             "dates": dates,
+             "balance": balance},
         )
 
 
@@ -113,18 +129,20 @@ def history_page(request: Request, date_from: str | None = Query(default=None), 
             {"request": request, "all_history": all_history},
         )
 
+
 @app.get("/admin")
 def admin_page(request:Request):
     telegram_token = request.cookies.get('token')
     telegram_id = request.cookies.get('tg_uid')
     check_admin = db_admin(user_id=telegram_id)
-    if telegram_id is None and telegram_token is None:
+    if telegram_id is None and telegram_token is None or check_admin[0][0] == False:
         return RedirectResponse('/')
-    elif check_admin[0]:
+    elif check_admin[0][0]:
         return templates.TemplateResponse(
             "admin.html",
             {"request": request,"check_admin":check_admin},
         )
+
 
 @app.get("/images")
 def image_container(request:Request):
@@ -136,10 +154,70 @@ def image_container(request:Request):
         return RedirectResponse('/history')
 
 
+@app.post("/upload")
+def upload_image(request:Request,image: UploadFile = File(...)):
+    contents = image.file.read()
+    msg = randint(-1000000000, -1)
+    path = f"images/{image.filename}"
+    path = add_date(path)
+    telegram_id = request.cookies.get('tg_uid')
+    a = uuid.uuid4()
+    # segmentation_module = SegmentationModule(r"../best_with_badges.pt")
+    try:
+        with open(f"../{path}", 'wb') as f:
+            f.write(contents)
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail=f"Не получилось записать файл на диск {e}"
+        )
+    finally:
+        image.file.close()
+    segment_images = connect_to_web.delay(path, str(a))
+    db_history_save(msg,telegram_id, path,"str","check")
+    return segment_images.id
+
+
+def add_date(path: str):
+    path = os.path.splitext(path)
+    result = f"{'.'.join(path[:-1])}-{datetime.now().strftime('%d-%b-%Y_%H-%M-%S')}{path[-1]}"
+    return result
+
+
+@app.websocket("/ws/{task_id}")
+async def send_photo(websocket:WebSocket, task_id: str):
+    await websocket.accept()
+    # processed_image_paths =f"../images/{}"
+    while True:
+        sleep(1)
+        res = AsyncResult(task_id)
+        # try:
+        #     status = res.status
+        #     await websocket.send_text(str(res.status))
+        # except AttributeError as e:
+        #     await websocket.send_text(str(e))
+        #     continue
+        # if not res.successful():
+        #     if res.status == 'PENDING':
+        #         await websocket.send_text(str(res.get()))
+        #     else:
+        #         await websocket.send_text(str(res.traceback))
+        # else:
+        #     await websocket.send_text(str(res.result))
+        if res.status == 'SUCCESS':
+            zip_path = res.get()
+            await websocket.send_text(zip_path)
+            break
+        else:
+            await websocket.send_text(str(res))
+
+    await websocket.close()
+
+
 app.include_router(router, tags=['Telegram Login'])
 
 app.mount("/static", StaticFiles(directory="static", html=True), name="static")
-app.mount("/images",StaticFiles(directory="../images"),name="images")
+app.mount("/images", StaticFiles(directory="../images"), name="images")
 
 if __name__ == '__main__':
     uvicorn.run(

@@ -6,6 +6,29 @@ function toggleAdditionalButtons() {
     additionalButtonsContainer.style.display = (additionalButtonsContainer.style.display === "none") ? "block" : "none";
 }
 
+function submitForm(){
+    var formData = new FormData();
+    console.log("oooooooooooooooooooooooooooooooooooooooooooooooooooo")
+    formData.append("image", document.getElementById("image").files[0], document.getElementById("image").files[0].name);
+
+    var xhr = new XMLHttpRequest();
+        xhr.open("POST", "/upload");
+        xhr.send(formData);
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                console.log(xhr.responseText);
+                ws = new WebSocket(`ws://${window.location.host}/ws/` + xhr.responseText.replace(/"/g, ''));
+                ws.onmessage = checkResponce
+            }
+        }
+    ;
+}
+
+function checkResponce(event){
+    console.log(event.data)
+}
+
+
 // Определение сценариев и соответствующих сообщений
 var scenarios = {
     scenario1: "Текст для сценария 1",
@@ -91,20 +114,6 @@ function reloadTokensDanil() {
     toggleAdditionalButtons()
 }
 
-
-// Функция для выхода из аккаунта
-function logout() {
-    const cookies = document.cookie.split(";");
-
-    for (let i = 0; i < cookies.length; i++) {
-        const cookie = cookies[i];
-        const eqPos = cookie.indexOf("=");
-        const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-        document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
-        location.reload()
-    }
-}
-
 // Функция для отображения/скрытия кнопки "Скачать архив"
 function toggleDownloadButton(show) {
     var downloadButton = document.getElementById("download-link");
@@ -150,25 +159,25 @@ function handleResponse(response) {
     // Проверка условия для отображения кнопки "Скачать архив"
     var showDownloadButton = response.hasArchive; // Ваше условие для отображения кнопки "Скачать архив" на основе полученного ответа
     toggleDownloadButton(showDownloadButton);
-
-    // Пример вызова функции displayImages с фиктивными данными
-    var fakeLeftImages = ["Daco_4925781.png", "Daco_4925781.png"]; // Фиктивные URL-адреса фотографий слева
-    var fakeRightImages = ["Daco_4925781.png", "Daco_4925781.png"]; // Фиктивные URL-адреса фотографий справа
-    displayImages(fakeLeftImages, fakeRightImages);
+    //
+    // // Пример вызова функции displayImages с фиктивными данными
+    // var fakeLeftImages = ["Daco_4925781.png", "Daco_4925781.png"]; // Фиктивные URL-адреса фотографий слева
+    // var fakeRightImages = ["Daco_4925781.png", "Daco_4925781.png"]; // Фиктивные URL-адреса фотографий справа
+    // displayImages(fakeLeftImages, fakeRightImages);
 }
 
-// Функция для отправки формы и получения ответа с бэкенда
-function submitForm() {
-    var form = document.getElementById("upload-form");
-    var formData = new FormData(form);
-
-    // Код для отправки формы на бэкенд и получения ответа
-    // ...
-
-    // Пример вызова функции handleResponse с фиктивным ответом
-    var fakeResponse = {hasArchive: true}; // Фиктивный ответ с бэкенда
-    handleResponse(fakeResponse);
-}
+// // Функция для отправки формы и получения ответа с бэкенда
+// function submitForm() {
+//     var form = document.getElementById("upload-form");
+//     var formData = new FormData(form);
+//
+//     // Код для отправки формы на бэкенд и получения ответа
+//     // ...
+//
+//     // Пример вызова функции handleResponse с фиктивным ответом
+//     var fakeResponse = {hasArchive: true}; // Фиктивный ответ с бэкенда
+//     handleResponse(fakeResponse);
+// }
 
 // Инициализация формы
 var form = document.getElementById("upload-form");
