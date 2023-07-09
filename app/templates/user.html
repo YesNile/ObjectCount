@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ObjectCount</title>
+    <link rel="stylesheet" type="text/css" href="../static/style.css">
+    <script type="text/javascript" src="../static/script.js" defer></script>
+</head>
+<body>
+<!--<h1>Привет, Давай распознаем твои объекты?</h1>-->
+<!--<h2>Наш проект представляет собой веб-приложение, которое позволяет пользователям загружать фотографии для обработки с-->
+<!--    использованием компьютерного зрения. После загрузки фото, наше приложение применяет алгоритмы компьютерного зрения-->
+<!--    для выделения объектов на изображении. В ответ вы получите количество объектов и все их мы вырежем в отдельное-->
+<!--    изображение без фона.</h2>-->
+</div>
+<div class="container" style="display: block" id="container">
+    <div id="dialog-window">
+        <img src="../static/robot.png" alt="Custom Image" id="custom-image">
+        <div class="user-buttons" id="user-buttons" style="margin-left: 200px;">
+            <div class="user-menu-cell" >Вероника</div>
+            <div class="user-menu-cell" >Дмитрий</div>
+            <div class="user-menu-cell" >Илья</div>
+            <div class="user-menu-cell" >Данил</div>
+        </div>
+        <div id="dialog-content"></div>
+    </div>
+    <form id="upload-form" enctype="multipart/form-data" style="margin-left: 800px;">
+        <label for="image">Выберите изображение:</label>
+        <input type="file" id="image" name="image" accept="image/jpeg, image/png" required>
+        <input type="submit"  id ="upload" value="Загрузить">
+    </form>
+    <form action="/history" method="GET" id="history" style="margin-left: 800px;">
+        <select name="date_from">
+            {% for date in dates %}
+            <option>{{date[0]}}</option>
+            {% endfor %}
+        </select>
+
+        <select name="date_to">
+            {% for date in dates %}
+            <option>{{date[0]}}</option>
+            {% endfor %}
+        </select>
+
+        <input type="submit">
+
+    </form>
+    <div id="left-images-container"></div>
+    <a id="download-link" href="#" download class="download-button">Скачать архив</a>
+    <div id="right-images-container"></div>
+</div>
+
+<!-- Кнопка в углу экрана -->
+<button class="menu-button" onclick="toggleMenu()" id="menu-button"></button>
+
+<!-- Меню -->
+<div class="bot-menu" id="bot-menu">
+    <div class="menu" id="menu">
+        <div class="menu-cell">Баланс токенов: <span>{{balance}}</span></div>
+        <div class="menu-cell" title="Обратитесь к разработчикам в телеграм" onclick="toggleAdditionalButtons()"
+             id="first">Пополнить токены
+        </div>
+        <div class="additional-buttons-container" id="additional-buttons-container" style="display: none;">
+            <div class="mini-menu-cell" title="Telegram Bot" onclick="reloadTokensVeronika()">Вероника</div>
+            <div class="mini-menu-cell" title="Project Manager" onclick="reloadTokensDmitry()">Дмитрий</div>
+            <div class="mini-menu-cell" title="Computer Vision" onclick="reloadTokensIlya()">Илья</div>
+            <div class="mini-menu-cell" title="Web development" onclick="reloadTokensDanil()">Данил</div>
+        </div>
+        <div class="menu-cell">
+            <a href="/logout">
+                Выйти из аккаунта
+            </a>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- Подвал -->
+<div class="footer">
+    <span class="footer-text">Наш бот в телеграм</span>
+    <a href="https://t.me/ObjectCounterBot">
+        <img class="telegram-icon" src="../static/Daco_4925781.png" alt="Telegram">
+    </a>
+</div>
+</body>
+</html>

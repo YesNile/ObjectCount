@@ -1,0 +1,323 @@
+/* Общие стили */
+body {
+    background-color: #0e1621;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 250px;
+    color: #fff;
+}
+
+h1 {
+    text-align: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: #0e1621;
+    padding: 20px;
+    margin: 0;
+    z-index: 999;
+}
+
+h2 {
+    text-align: center;
+    position: fixed;
+    top: 60px;
+    left: 0;
+    right: 0;
+    background-color: #0e1621;
+    padding: 20px;
+    margin: 0;
+    z-index: 999;
+}
+
+/* Стили для макета страницы */
+.container {
+    max-width: 1500px;
+    margin: 0 auto;
+    padding-top: 100px;
+}
+
+form {
+    margin-top: 20px;
+    text-align: center;
+}
+
+label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+input[type=file] {
+    margin-bottom: 10px;
+}
+
+input[type=submit] {
+    background-color: #1f304e;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+input[type=submit]:hover {
+    background-color: #45a049;
+}
+
+/*Стили для окна диалога на странице авторизации*/
+#dialog-window-index {
+    position: absolute;
+    top: 15%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 450px;
+    height: 400px;
+    padding: 20px;
+    background-color: #1C3A58;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/*#dialog-window-index {*/
+/*  position: relative;*/
+/*  width: 500px;*/
+/*  height: 500px;*/
+/*  padding: 20px;*/
+/*  background-color: #1C3A58;*/
+/*  border-radius: 8px;*/
+/*  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);*/
+/*}*/
+
+/*Стили для диалогового пузыря*/
+#dialog-window-index::before {
+  content: "";
+  position: absolute;
+  bottom: -15px;
+  left: -15px;
+  width: 0;
+  height: 0;
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-top: 30px solid #1C3A58;
+  border-bottom-left-radius: 8px;
+  transform: rotate(45deg);
+}
+
+.hello-text {
+  margin-top: 100px;
+}
+
+
+/*Стили для контента в окне диалога на странице авторизации*/
+#dialog-content {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+
+/*Стили для робота на странице авторизации*/
+#custom-image {
+  position: absolute;
+  top: 400px;
+  left: -180px;
+  width: 150px; /* Размер картинки */
+  height: 150px;
+}
+
+/*Стили для виджета авторизации телеграм*/
+.telegram-widget-container {
+    position: fixed;
+    top: 300px;
+    left: 30%;
+    width: 200px;
+    height: 200px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 999;
+}
+
+/* Стили для кнопки в углу экрана */
+.menu-button {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 20px;
+    height: 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 999;
+}
+
+/* Стили для меню */
+.menu {
+    position: fixed;
+    top: 60px;
+    right: 40px;
+    background-color: #17212b;
+    padding: 10px;
+    border: 1px solid #000;
+    border-radius: 4px;
+    display: none;
+    z-index: 999;
+}
+
+
+.menu-cell {
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #112437;
+    border-radius: 4px;
+    color: #fff;
+    cursor: pointer;
+}
+
+.menu-cell:hover {
+    background-color: #1C3A58;
+}
+
+.additional-buttons-container {
+    margin-top: 10px;
+    display: none;
+    white-space: normal;
+    text-align: center;
+}
+
+.mini-menu-cell {
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #112437;
+    border-radius: 4px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 12px;
+    width: 150px;
+    margin-left: auto;
+}
+
+.mini-menu-cell:hover {
+    background-color: #1C3A58;
+}
+
+.user-menu-cell {
+    padding: 10px;
+    margin-bottom: 10px;
+    left: -1000px;
+    background-color: #112437;
+    border-radius: 4px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 12px;
+    width: 150px;
+    margin-left: auto;
+}
+
+.user-menu-cell:hover {
+    background-color: #1C3A58;
+}
+
+#dialog-window {
+    position: absolute;
+    top: 27%;
+    left: 40%;
+    transform: translateX(-50%);
+    width: 450px;
+    height: 400px;
+    padding: 20px;
+    background-color: #1C3A58;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+#dialog-window::before {
+  content: "";
+  position: absolute;
+  bottom: -15px;
+  left: -15px;
+  width: 0;
+  height: 0;
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-top: 30px solid #1C3A58;
+  border-bottom-left-radius: 8px;
+  transform: rotate(45deg);
+}
+
+.hello-text {
+  margin-top: 100px;
+}
+
+/*Стили для робота на странице авторизации*/
+#custom-image {
+  position: absolute;
+  top: 400px;
+  left: -180px;
+  width: 150px; /* Размер картинки */
+  height: 150px;
+}
+
+
+#dialog-content {
+    text-align: center;
+    line-height: 1.5;
+}
+
+
+/* Стили для подвала */
+.footer {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    color: #fff;
+}
+
+.footer-text {
+    margin-right: 10px;
+}
+
+.telegram-icon {
+    width: 20px;
+    height: 20px;
+}
+
+/* Стили для кнопки "Скачать архив" */
+.download-button {
+    background-color: #1f304e;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    display: none;
+}
+
+.download-button:hover {
+    background-color: #45a049;
+}
+
+/* Стили для контейнеров с фотографиями */
+#left-images-container,
+#right-images-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.image-container {
+    flex-basis: 33.33%;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.image-container img {
+    max-width: 100%;
+    height: auto;
+}

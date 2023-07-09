@@ -15,6 +15,7 @@ def db_connect(user_id, user_name):
     print("Record inserted successfully")
     con.close()
 
+
 def db_coins(user_id):
     con = psycopg2.connect(host="127.0.0.1", user="postgres", password="12345", database="telegramBot", port="5432")
     cur = con.cursor()
@@ -40,13 +41,13 @@ def db_score(user_id):
     con.close()
 
 
-def db_history_save(message_id, user_id, image_path, message_text):
+def db_history_save(message_id, user_id, image_path, message_text,zip_path):
     con = psycopg2.connect(host="127.0.0.1", user="postgres", password="12345", database="telegramBot", port="5432")
     cur = con.cursor()
     cur.execute(
-        "INSERT INTO req_history (id_message, id_users, message_text, message_pictures, date_mes) VALUES (%s, %s, %s, %s, %s)",
+        "INSERT INTO req_history (id_message, id_users, message_text, message_pictures, date_mes,zip_path) VALUES (%s, %s, %s, %s, %s,%s)",
         (message_id, user_id, message_text, image_path,
-         datetime.now().date()))
+         datetime.now().date(), zip_path))
     con.commit()
 
     print('добавленно в историю')
@@ -153,6 +154,25 @@ def db_admin_users():
     ls = cur.fetchall()
     con.close()
     return ls
+
+def db_receive_date(user_id):
+    con = psycopg2.connect(host="127.0.0.1", user="postgres", password="1234", database="telegramBot", port="5432")
+    cur = con.cursor()
+    cur.execute("SELECT distinct date_mes FROM req_history WHERE id_users = %s", (user_id,))
+    ls = cur.fetchall()
+    con.close()
+    return ls
+
+
+def update_zip_path(user_id,message,path):
+    con = psycopg2.connect(host="127.0.0.1", user="postgres", password="1234", database="telegramBot", port="5432")
+    cur = con.cursor()
+    cur.execute("UPDATE req_history set zip_path = %s, message_text = %s WHERE message_pictures = %s", (path,message,user_id))
+    con.commit()
+    print('update zip path')
+    con.close()
+
+
 
 
 def db_admin_username(user_name):

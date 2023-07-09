@@ -1,9 +1,28 @@
 import os
+from time import sleep
+
 import cv2
 import numpy as np
 from ultralytics import YOLO
+from celery import Celery
+from database.database_manager import update_zip_path
 
 from utils.utils import create_zip_archive
+
+celery = Celery('tasks', broker='redis://localhost:6379',backend='redis://localhost:6379/0',result_extended=True, CELERY_TASK_TRACK_STARTED = True)
+
+
+@celery.task()
+def connect_to_web(path, a):
+    print (os.getcwd())
+    i = celery.control.inspect()
+    print(i.scheduled)
+    test = SegmentationModule(r"../best_with_badges.pt")
+    sleep(5)
+    web_work = test.segment_image(image_path=path, photo_id=str(a))
+    message = f"Количество найденных объектов на фотографии: {len(web_work[0])}"
+    update_zip_path(path,message, web_work[1])
+    return web_work[1]
 
 
 class SegmentationModule:
@@ -11,12 +30,16 @@ class SegmentationModule:
         # Инициализация модели YOLO
         self.model = YOLO(model)
 
+    # def segment_image(self, image_path, photo_id):
+    #     SegmentationModule.segment_image(modelka = self, image_path = image_path, photo_id = photo_id)
+
     def segment_image(self, image_path, photo_id):
         # Создание директории для сохранения результатов сегментации
-        os.makedirs(rf"D:\Projects_cv\ObjectCount\images\{photo_id}", exist_ok=True)
+        os.makedirs(rf"../images/{photo_id}", exist_ok=True)
 
         # Загрузка изображения
         img = cv2.imread(image_path)
+        print(img)
 
         # Выполнение сегментации с помощью модели YOLO
         results = self.model(img)
@@ -51,32 +74,36 @@ class SegmentationModule:
                     mask_binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
                 )
                 x, y, w, h = cv2.boundingRect(contours[0])
-                cropped = masked[y : y + h, x : x + w]
-                cropped_transparent = transparent[y : y + h, x : x + w]
+                cropped = masked[y: y + h, x: x + w]
+                cropped_transparent = transparent[y: y + h, x: x + w]
 
                 # Сохранение сегментированных изображений в отдельные файлы
                 segment_path = (
-                    rf"D:\Projects_cv\ObjectCount\images\{photo_id}\object_{i}.png"
+                    rf"../images/{photo_id}/object_{i}.png"
                 )
                 cv2.imwrite(segment_path, cropped_transparent)
                 segmented_images.append(segment_path)
 
                 # Сохранение обработанного изображения с наложенными масками
                 self.save_segmented_res(results, photo_id)
+        zip = self.save_zip_archive(photo_id)
 
-        return segmented_images
+        return (segmented_images, zip)
 
     def save_segmented_res(self, results, photo_id):
         # Создание пути к сохраняемому изображению
         res_plotted = results[0].plot()
-        image_path = rf"D:\Projects_cv\ObjectCount\images\{photo_id}.jpg"
+        image_path = rf"../images/{photo_id}.jpg"
 
         # Сохранение обработанного изображения
         cv2.imwrite(image_path, res_plotted)
 
+    def save_zip_archive(self,photo_id):
+
         # Создание директории с сегментированными изображениями
-        directory = rf"D:\Projects_cv\ObjectCount\images\{photo_id}"
+        directory = rf"../images/{photo_id}"
 
         # Создание ZIP-архива с сегментированными изображениями
-        output_path = rf"D:\Projects_cv\ObjectCount\images\{photo_id}.zip"
+        output_path = rf"../images/{photo_id}.zip"
         create_zip_archive(directory, output_path)
+        return output_path

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<table>
+    {% for message in all_history %}
+    <tr>
+        <td>
+            {{message[0]}}
+        </td>
+        <td>
+            <img src="{{message[1]}}" width="20%" height="20%">
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+</body>
+</html>
