@@ -35,7 +35,7 @@ class SegmentationModule:
 
     def segment_image(self, image_path, photo_id):
         # Создание директории для сохранения результатов сегментации
-        os.makedirs(rf"../images/{photo_id}", exist_ok=True)
+        os.makedirs(rf"images/{photo_id}", exist_ok=True)
 
         # Загрузка изображения
         img = cv2.imread(image_path)
@@ -79,7 +79,7 @@ class SegmentationModule:
 
                 # Сохранение сегментированных изображений в отдельные файлы
                 segment_path = (
-                    rf"../images/{photo_id}/object_{i}.png"
+                    rf"images/{photo_id}/object_{i}.png"
                 )
                 cv2.imwrite(segment_path, cropped_transparent)
                 segmented_images.append(segment_path)
@@ -93,7 +93,7 @@ class SegmentationModule:
     def save_segmented_res(self, results, photo_id):
         # Создание пути к сохраняемому изображению
         res_plotted = results[0].plot()
-        image_path = rf"../images/{photo_id}.jpg"
+        image_path = rf"images/{photo_id}.jpg"
 
         # Сохранение обработанного изображения
         cv2.imwrite(image_path, res_plotted)
@@ -101,9 +101,9 @@ class SegmentationModule:
     def save_zip_archive(self,photo_id):
 
         # Создание директории с сегментированными изображениями
-        directory = rf"../images/{photo_id}"
+        directory = rf"images/{photo_id}"
 
         # Создание ZIP-архива с сегментированными изображениями
-        output_path = rf"../images/{photo_id}.zip"
+        output_path = rf"images/{photo_id}.zip"
         create_zip_archive(directory, output_path)
         return output_path

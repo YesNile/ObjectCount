@@ -6,26 +6,34 @@ function toggleAdditionalButtons() {
     additionalButtonsContainer.style.display = (additionalButtonsContainer.style.display === "none") ? "block" : "none";
 }
 
-function submitForm(){
+function submitForm() {
     var formData = new FormData();
     console.log("oooooooooooooooooooooooooooooooooooooooooooooooooooo")
     formData.append("image", document.getElementById("image").files[0], document.getElementById("image").files[0].name);
 
     var xhr = new XMLHttpRequest();
-        xhr.open("POST", "/upload");
-        xhr.send(formData);
-        xhr.onload = function() {
-            if (xhr.status === 200) {
-                console.log(xhr.responseText);
-                ws = new WebSocket(`ws://${window.location.host}/ws/` + xhr.responseText.replace(/"/g, ''));
-                ws.onmessage = checkResponce
-            }
+    xhr.open("POST", "/upload");
+    xhr.send(formData);
+    xhr.onload = function () {
+        if (xhr.status === 200) {
+            console.log(xhr.responseText);
+            ws = new WebSocket(`ws://${window.location.host}/ws/` + xhr.responseText.replace(/"/g, ''));
+            ws.onmessage = checkResponce
         }
-    ;
+    };
 }
 
-function checkResponce(event){
-    console.log(event.data)
+function checkResponce(event) {
+    var form = document.getElementById("save-archive");
+    form.addEventListener("click", function (checker) {
+        const save = document.createElement("a");
+        save.href =event.data;
+        save.download="archive.zip"
+
+        document.body.appendChild(save)
+        save.click()
+        document.body.removeChild(save)
+    });
 }
 
 
@@ -79,17 +87,17 @@ function toggleMenu() {
 
 // Функция для получения куки с указанным именем
 function getCookie(name) {
-  let matches = document.cookie.match(new RegExp(
-    "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
-  ));
-  return matches ? decodeURIComponent(matches[1]) : undefined;
+    let matches = document.cookie.match(new RegExp(
+        "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+    ));
+    return matches ? decodeURIComponent(matches[1]) : undefined;
 }
 
 // Функция для проверки и отображения баланса
-async function checkBalance(){
+async function checkBalance() {
     let cookies = getCookie("tg_uid")
-    let response = await fetch(`/tglogin/${cookies}`).then(x=>x.text());
-    document.getElementById("balance").textContent=response;
+    let response = await fetch(`/tglogin/${cookies}`).then(x => x.text());
+    document.getElementById("balance").textContent = response;
 }
 
 // Функция для пополнения токенов
@@ -98,16 +106,19 @@ function reloadTokensVeronika() {
     window.location.href = " https://t.me/+79243652878";
     toggleAdditionalButtons()
 }
+
 function reloadTokensDmitry() {
     // Переадресация на профиль в Telegram
     window.location.href = "https://t.me/Jiraffeck";
     toggleAdditionalButtons()
 }
+
 function reloadTokensIlya() {
     // Переадресация на профиль в Telegram
     window.location.href = "https://t.me/nortrow";
     toggleAdditionalButtons()
 }
+
 function reloadTokensDanil() {
     // Переадресация на профиль в Telegram
     window.location.href = "https://t.me/IvanGroznyiA";

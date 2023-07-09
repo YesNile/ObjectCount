@@ -208,8 +208,6 @@ async def send_photo(websocket:WebSocket, task_id: str):
             zip_path = res.get()
             await websocket.send_text(zip_path)
             break
-        else:
-            await websocket.send_text(str(res))
 
     await websocket.close()
 

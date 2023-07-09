@@ -3,7 +3,7 @@ from datetime import datetime
 
 
 def db_connect(user_id, user_name):
-    con = psycopg2.connect(host="127.0.0.1", user="postgres", password="12345", database="telegramBot", port="5432")
+    con = psycopg2.connect(host="127.0.0.1", user="postgres", password="1234", database="telegramBot", port="5432")
     cur = con.cursor()
     cur.execute("SELECT id FROM users WHERE id = %s", (user_id,))
 
@@ -17,7 +17,7 @@ def db_connect(user_id, user_name):
 
 
 def db_coins(user_id):
-    con = psycopg2.connect(host="127.0.0.1", user="postgres", password="12345", database="telegramBot", port="5432")
+    con = psycopg2.connect(host="127.0.0.1", user="postgres", password="1234", database="telegramBot", port="5432")
     cur = con.cursor()
     cur.execute("SELECT coins FROM users WHERE id = %s", (user_id,))
     user = cur.fetchall()
@@ -32,7 +32,7 @@ def db_coins(user_id):
 
 
 def db_score(user_id):
-    con = psycopg2.connect(host="127.0.0.1", user="postgres", password="12345", database="telegramBot", port="5432")
+    con = psycopg2.connect(host="127.0.0.1", user="postgres", password="1234", database="telegramBot", port="5432")
     cur = con.cursor()
     cur.execute("SELECT coins FROM users WHERE id = %s", (user_id,))
     user = cur.fetchall()
@@ -42,7 +42,7 @@ def db_score(user_id):
 
 
 def db_history_save(message_id, user_id, image_path, message_text,zip_path):
-    con = psycopg2.connect(host="127.0.0.1", user="postgres", password="12345", database="telegramBot", port="5432")
+    con = psycopg2.connect(host="127.0.0.1", user="postgres", password="1234", database="telegramBot", port="5432")
     cur = con.cursor()
     cur.execute(
         "INSERT INTO req_history (id_message, id_users, message_text, message_pictures, date_mes,zip_path) VALUES (%s, %s, %s, %s, %s,%s)",
@@ -55,7 +55,7 @@ def db_history_save(message_id, user_id, image_path, message_text,zip_path):
 
 
 def db_history_allview(user_id):
-    con = psycopg2.connect(host="127.0.0.1", user="postgres", password="12345", database="telegramBot", port="5432")
+    con = psycopg2.connect(host="127.0.0.1", user="postgres", password="1234", database="telegramBot", port="5432")
     cur = con.cursor()
     cur.execute("SELECT message_text, message_pictures FROM req_history WHERE id_users = %s", (user_id,))
     ls = cur.fetchall()
@@ -66,7 +66,7 @@ def db_history_allview(user_id):
 
 
 def db_history_view(user_id, date_mes):
-    con = psycopg2.connect(host="127.0.0.1", user="postgres", password="12345", database="telegramBot", port="5432")
+    con = psycopg2.connect(host="127.0.0.1", user="postgres", password="1234", database="telegramBot", port="5432")
     cur = con.cursor()
     cur.execute(
         "SELECT message_text, message_pictures FROM req_history WHERE id_users = %s AND date_mes >= %s AND date_mes <= %s",
@@ -80,7 +80,7 @@ def db_history_view(user_id, date_mes):
 
 
 def db_favourites_update(bo, image_path):
-    con = psycopg2.connect(host="127.0.0.1", user="postgres", password="12345", database="telegramBot", port="5432")
+    con = psycopg2.connect(host="127.0.0.1", user="postgres", password="1234", database="telegramBot", port="5432")
     cur = con.cursor()
     cur.execute("UPDATE req_history set favourites = %s WHERE message_pictures = %s", (bo, image_path))
     con.commit()
@@ -90,7 +90,7 @@ def db_favourites_update(bo, image_path):
 
 
 def db_favourites_view(user_id):
-    con = psycopg2.connect(host="127.0.0.1", user="postgres", password="12345", database="telegramBot", port="5432")
+    con = psycopg2.connect(host="127.0.0.1", user="postgres", password="1234", database="telegramBot", port="5432")
     cur = con.cursor()
     cur.execute(
         "SELECT message_text, message_pictures, id_message FROM req_history WHERE id_users = %s AND favourites = %s",
@@ -103,7 +103,7 @@ def db_favourites_view(user_id):
 
 
 def db_favourites_mes(id_messag, message_pictures):
-    con = psycopg2.connect(host="127.0.0.1", user="postgres", password="12345", database="telegramBot", port="5432")
+    con = psycopg2.connect(host="127.0.0.1", user="postgres", password="1234", database="telegramBot", port="5432")
     cur = con.cursor()
     cur.execute("UPDATE req_history set id_message = %s WHERE message_pictures = %s", (id_messag, message_pictures))
     con.commit()
@@ -111,7 +111,7 @@ def db_favourites_mes(id_messag, message_pictures):
 
 
 def db_estimation(bo, message_id):
-    con = psycopg2.connect(host="127.0.0.1", user="postgres", password="12345", database="telegramBot", port="5432")
+    con = psycopg2.connect(host="127.0.0.1", user="postgres", password="1234", database="telegramBot", port="5432")
     cur = con.cursor()
     cur.execute("UPDATE req_history set estimation = %s WHERE id_message = %s", (bo, message_id))
     con.commit()
@@ -120,7 +120,7 @@ def db_estimation(bo, message_id):
 
 
 def db_message_photo(message_id):
-    con = psycopg2.connect(host="127.0.0.1", user="postgres", password="12345", database="telegramBot", port="5432")
+    con = psycopg2.connect(host="127.0.0.1", user="postgres", password="1234", database="telegramBot", port="5432")
     cur = con.cursor()
     cur.execute("SELECT message_text, message_pictures, estimation FROM req_history WHERE id_message = %s",
                 (message_id,))
@@ -130,7 +130,7 @@ def db_message_photo(message_id):
 
 
 def db_admin(user_id):
-    con = psycopg2.connect(host="127.0.0.1", user="postgres", password="12345", database="telegramBot", port="5432")
+    con = psycopg2.connect(host="127.0.0.1", user="postgres", password="1234", database="telegramBot", port="5432")
     cur = con.cursor()
     cur.execute("SELECT admin FROM users WHERE id = %s", (user_id,))
     ls = cur.fetchall()
@@ -139,7 +139,7 @@ def db_admin(user_id):
 
 
 def db_admin_activity():
-    con = psycopg2.connect(host="127.0.0.1", user="postgres", password="12345", database="telegramBot", port="5432")
+    con = psycopg2.connect(host="127.0.0.1", user="postgres", password="1234", database="telegramBot", port="5432")
     cur = con.cursor()
     cur.execute("SELECT date_mes FROM req_history")
     ls = cur.fetchall()
@@ -148,7 +148,7 @@ def db_admin_activity():
 
 
 def db_admin_users():
-    con = psycopg2.connect(host="127.0.0.1", user="postgres", password="12345", database="telegramBot", port="5432")
+    con = psycopg2.connect(host="127.0.0.1", user="postgres", password="1234", database="telegramBot", port="5432")
     cur = con.cursor()
     cur.execute("SELECT date_reg FROM users")
     ls = cur.fetchall()
@@ -176,7 +176,7 @@ def update_zip_path(user_id,message,path):
 
 
 def db_admin_username(user_name):
-    con = psycopg2.connect(host="127.0.0.1", user="postgres", password="12345", database="telegramBot", port="5432")
+    con = psycopg2.connect(host="127.0.0.1", user="postgres", password="1234", database="telegramBot", port="5432")
     cur = con.cursor()
     cur.execute("SELECT username FROM users WHERE username = %s", (user_name,))
     ls = cur.fetchall()
@@ -185,7 +185,7 @@ def db_admin_username(user_name):
 
 
 def db_admin_coins(coins, user_name):
-    con = psycopg2.connect(host="127.0.0.1", user="postgres", password="12345", database="telegramBot", port="5432")
+    con = psycopg2.connect(host="127.0.0.1", user="postgres", password="1234", database="telegramBot", port="5432")
     cur = con.cursor()
     cur.execute("UPDATE users set coins = coins + %s WHERE username = %s", (coins, user_name))
     con.commit()
