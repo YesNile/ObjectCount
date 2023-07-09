@@ -22,7 +22,7 @@ def connect_to_web(path, a):
     web_work = test.segment_image(image_path=path, photo_id=str(a))
     message = f"Количество найденных объектов на фотографии: {len(web_work[0])}"
     update_zip_path(path,message, web_work[1])
-    return web_work[1]
+    return (web_work[1],web_work[2])
 
 
 class SegmentationModule:
@@ -85,10 +85,10 @@ class SegmentationModule:
                 segmented_images.append(segment_path)
 
                 # Сохранение обработанного изображения с наложенными масками
-                self.save_segmented_res(results, photo_id)
+        test_mask = self.save_segmented_res(results, photo_id)
         zip = self.save_zip_archive(photo_id)
 
-        return (segmented_images, zip)
+        return (segmented_images, zip,test_mask)
 
     def save_segmented_res(self, results, photo_id):
         # Создание пути к сохраняемому изображению
@@ -97,6 +97,7 @@ class SegmentationModule:
 
         # Сохранение обработанного изображения
         cv2.imwrite(image_path, res_plotted)
+        return image_path
 
     def save_zip_archive(self,photo_id):
 

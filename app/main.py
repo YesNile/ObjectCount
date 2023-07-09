@@ -205,8 +205,8 @@ async def send_photo(websocket:WebSocket, task_id: str):
         # else:
         #     await websocket.send_text(str(res.result))
         if res.status == 'SUCCESS':
-            zip_path = res.get()
-            await websocket.send_text(zip_path)
+            zip_path,test_mask = res.get()
+            await websocket.send_text(f"{zip_path};{test_mask}")
             break
 
     await websocket.close()

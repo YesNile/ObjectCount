@@ -24,10 +24,18 @@ function submitForm() {
 }
 
 function checkResponce(event) {
+    var message = event.data
+    var zip_path = message.split(';')[0]
+    var mask = message.split(';')[1]
     var form = document.getElementById("save-archive");
+
+    var img = document.createElement("img");
+    img.src = mask;
+    document.querySelector('#container').appendChild(img)
+
     form.addEventListener("click", function (checker) {
         const save = document.createElement("a");
-        save.href =event.data;
+        save.href =zip_path;
         save.download="archive.zip"
 
         document.body.appendChild(save)
