@@ -41,6 +41,7 @@ function checkResponce(event) {
     document.getElementById("done").style.display = "block";
     document.getElementById("save-archive").style.display = "block";
     document.getElementById("dialog-window").appendChild(img);
+    document.getElementById("dialog-content").style.display = "none";
     // document.querySelector('#container').appendChild(img)
 
     var objects = message.split(';')[2]
@@ -102,7 +103,27 @@ function showTextOnClick(param) {
             historyBtn.style.display = "none";
             back.style.display = "block";
 
-            dialogContent.textContent = "Пожалуйста, подождите. Идёт обработка изображения..."
+            var textArray = [
+                ".",
+                "..",
+                "...",
+                "....",
+                "....."
+
+            ];
+            var textIndex = 0;
+            var intervalId;
+
+        function updateText() {
+            dialogContent.textContent = textArray[textIndex];
+            dialogContent.style.fontSize = "100px"; // Добавляем стиль шрифта
+            textIndex = (textIndex + 1) % textArray.length;
+        }
+
+            intervalId = setInterval(updateText, 1000);
+
+            //dialogContent.textContent = "Пожалуйста, подождите. Идёт обработка изображения..."
+            break
 
         case "history":
             uploadPhoto.style.display = "none";
