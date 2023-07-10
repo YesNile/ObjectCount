@@ -1,9 +1,13 @@
 //console.log(document.cookie)
-window.onload = () => cookieCheck()
+///window.onload = () => adjustDialogHeight();
 
 function toggleAdditionalButtons() {
     var additionalButtonsContainer = document.getElementById("additional-buttons-container");
     additionalButtonsContainer.style.display = (additionalButtonsContainer.style.display === "none") ? "block" : "none";
+}
+
+function redirectToPage(url) {
+    window.location.href = url;
 }
 
 function submitForm() {
@@ -31,15 +35,21 @@ function checkResponce(event) {
 
     var img = document.createElement("img");
     img.src = mask;
-    document.querySelector('#container').appendChild(img)
+    img.style.width = "99%";
+    img.style.height = "99%";
+    document.getElementById("history").style.display = "none";
+    document.getElementById("done").style.display = "block";
+    document.getElementById("save-archive").style.display = "block";
+    document.getElementById("dialog-window").appendChild(img);
+    // document.querySelector('#container').appendChild(img)
 
     var objects = message.split(';')[2]
     window.alert(objects)
 
     form.addEventListener("click", function (checker) {
         const save = document.createElement("a");
-        save.href =zip_path;
-        save.download="archive.zip"
+        save.href = zip_path;
+        save.download = "archive.zip"
 
         document.body.appendChild(save)
         save.click()
@@ -56,11 +66,90 @@ var scenarios = {
 };
 
 // Функция для отображения окна диалога с заданным текстом
-function showDialog(scenario) {
-    var dialogWindow = document.getElementById("dialog-window");
+function showTextOnClick(param) {
+
+    var uploadPhoto = document.getElementById("upload-form")
     var dialogContent = document.getElementById("dialog-content");
-    dialogContent.textContent = scenarios[scenario];
-    dialogWindow.style.display = "block";
+    var historyForm = document.getElementById("history")
+    var favouritesBtn = document.getElementById("check-favourites")
+    var imageupload = document.getElementById("image-upload")
+    var instructionBtn = document.getElementById("instruction")
+    var historyBtn = document.getElementById("check-history")
+    var back = document.getElementById("back")
+    var allTimeHistory = document.getElementById("redirectHistory")
+
+    switch (param) {
+
+        case "wait":
+            uploadPhoto.style.display = "block";
+
+            historyForm.style.display = "none";
+            favouritesBtn.style.display = "none";
+            imageupload.style.display = "none";
+            instructionBtn.style.display = "none";
+            historyBtn.style.display = "none";
+            back.style.display = "block";
+
+            dialogContent.textContent = "Для наилучшего результата необходимо изображение в хорошем качестве с объектами на контрастном фоне, желательно в условиях дневной освещённости";
+            break;
+        case"image":
+            uploadPhoto.style.display = "none";
+
+            historyForm.style.display = "none";
+            favouritesBtn.style.display = "none";
+            imageupload.style.display = "none";
+            instructionBtn.style.display = "none";
+            historyBtn.style.display = "none";
+            back.style.display = "block";
+
+            dialogContent.textContent = "Пожалуйста, подождите. Идёт обработка изображения..."
+
+        case "history":
+            uploadPhoto.style.display = "none";
+
+            historyForm.style.display = "block";
+            back.style.display = "block";
+            allTimeHistory.style.display = "block";
+
+            dialogContent.textContent = "Ваша история";
+            break;
+        case "favourites":
+            uploadPhoto.style.display = "none";
+
+            historyForm.style.display = "none"
+
+            dialogContent.textContent = "Ваши избранные";
+            break;
+        case "instructions":
+            uploadPhoto.style.display = "none";
+
+            historyForm.style.display = "none"
+            back.style.display = "block"
+
+            dialogContent.textContent = "Я обучен распознаванию порядка 25 различных объектов. Для удовлетворительного результата нужна фотография в хорошем качестве, на контрастном для объектов фоне, желательно снимать близко к объектам.";
+            break;
+        case "back":
+            uploadPhoto.style.display = "none";
+
+            historyForm.style.display = "none"
+            back.style.display = "none";
+            favouritesBtn.style.display = "block";
+            imageupload.style.display = "block";
+            instructionBtn.style.display = "block";
+            historyBtn.style.display = "block";
+            allTimeHistory.style.display = "none"
+
+            dialogContent.innerHTML = "Привет!<br>Загрузи фотографию с объектами, которые обычно лежат на твоем столе, и узнай сколько предметов одной категории на ней присутствует";
+
+            break;
+
+        default:
+            historyForm.style.display = "none"
+            uploadPhoto.style.display = "none";
+            text = "Вы сломали бота(";
+    }
+
+    console.log(text); // Вывод текста в консоль (можно заменить на другую логику)
 }
 
 // Пример вызова функции для отображения сценария 1

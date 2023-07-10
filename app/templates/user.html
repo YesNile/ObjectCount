@@ -16,19 +16,23 @@
     <div id="dialog-window">
         <img src="../static/robot.png" alt="Custom Image" id="custom-image">
         <div class="user-buttons" id="user-buttons" style="margin-left: 200px;">
-            <div class="archive" id="save-archive">Вероника</div>
-            <div class="user-menu-cell" >Дмитрий</div>
-            <div class="user-menu-cell" >Илья</div>
-            <div class="user-menu-cell" >Данил</div>
+            <div class="archive" id="save-archive" style="display: none">Скачать архив</div>
+            <div class="user-menu-cell" onclick="showTextOnClick('wait')" id="image-upload" >Загрузить изображение</div>
+            <div class="user-menu-cell" onclick="showTextOnClick('history')" id="check-history" >История</div>
+            <div class="user-menu-cell" onclick="redirectToPage('/favourites')" id="check-favourites">Избранное</div>
+            <div class="user-menu-cell" onclick="showTextOnClick('instructions')" id="instruction" >Инструкция</div>
+            <div class="user-menu-cell" onclick="showTextOnClick('back')" id="back" >Назад</div>
+            <div class="user-menu-cell" onclick="redirectToPage('/')" id="done" >Готово</div>
+            <div class="user-menu-cell" onclick="redirectToPage('/history')" id="redirectHistory" >За всё время</div>
         </div>
-        <div id="dialog-content"></div>
+        <div id="dialog-content">Привет!<br>Загрузи фотографию с объектами, которые обычно лежат на твоем столе, и узнай сколько предметов одной категории на ней присутствует</div>
     </div>
-    <form id="upload-form" enctype="multipart/form-data" style="margin-left: 800px;">
+    <form id="upload-form" enctype="multipart/form-data" >
         <label for="image">Выберите изображение:</label>
         <input type="file" id="image" name="image" accept="image/jpeg, image/png" required>
-        <input type="submit"  id ="upload" value="Загрузить">
+        <input type="submit"  id ="upload" onclick="showTextOnClick('image')" value="Загрузить">
     </form>
-    <form action="/history" method="GET" id="history" style="margin-left: 800px;">
+    <form action="/history" method="GET" id="history" >
         <select name="date_from">
             {% for date in dates %}
             <option>{{date[0]}}</option>
@@ -44,9 +48,6 @@
         <input type="submit">
 
     </form>
-    <div id="left-images-container"></div>
-    <a id="download-link" href="#" download class="download-button">Скачать архив</a>
-    <div id="right-images-container"></div>
 </div>
 
 <!-- Кнопка в углу экрана -->

@@ -79,51 +79,41 @@ input[type=submit]:hover {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-/*#dialog-window-index {*/
-/*  position: relative;*/
-/*  width: 500px;*/
-/*  height: 500px;*/
-/*  padding: 20px;*/
-/*  background-color: #1C3A58;*/
-/*  border-radius: 8px;*/
-/*  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);*/
-/*}*/
-
 /*Стили для диалогового пузыря*/
 #dialog-window-index::before {
-  content: "";
-  position: absolute;
-  bottom: -15px;
-  left: -15px;
-  width: 0;
-  height: 0;
-  border-left: 15px solid transparent;
-  border-right: 15px solid transparent;
-  border-top: 30px solid #1C3A58;
-  border-bottom-left-radius: 8px;
-  transform: rotate(45deg);
+    content: "";
+    position: absolute;
+    bottom: -15px;
+    left: -15px;
+    width: 0;
+    height: 0;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-top: 30px solid #1C3A58;
+    border-bottom-left-radius: 8px;
+    transform: rotate(45deg);
 }
 
 .hello-text {
-  margin-top: 100px;
+    margin-top: 100px;
 }
 
 
 /*Стили для контента в окне диалога на странице авторизации*/
-#dialog-content {
-  display: flex;
-  align-items: center;
-  position: relative;
+#dialog-content-index {
+    display: flex;
+    align-items: center;
+    position: relative;
 }
 
 
 /*Стили для робота на странице авторизации*/
 #custom-image {
-  position: absolute;
-  top: 400px;
-  left: -180px;
-  width: 150px; /* Размер картинки */
-  height: 150px;
+    position: absolute;
+    top: 400px;
+    left: -180px;
+    width: 150px; /* Размер картинки */
+    height: 150px;
 }
 
 /*Стили для виджета авторизации телеграм*/
@@ -204,8 +194,9 @@ input[type=submit]:hover {
     background-color: #1C3A58;
 }
 
+.archive,
 .user-menu-cell {
-    padding: 10px;
+    padding: 17px;
     margin-bottom: 10px;
     left: -1000px;
     background-color: #112437;
@@ -213,10 +204,11 @@ input[type=submit]:hover {
     color: #fff;
     cursor: pointer;
     font-size: 12px;
-    width: 150px;
+    width: 200px;
     margin-left: auto;
 }
 
+.archive,
 .user-menu-cell:hover {
     background-color: #1C3A58;
 }
@@ -232,39 +224,131 @@ input[type=submit]:hover {
     background-color: #1C3A58;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    font-size: large;
+    text-align: center;
+    justify-content: center;
 }
 
+
 #dialog-window::before {
-  content: "";
-  position: absolute;
-  bottom: -15px;
-  left: -15px;
-  width: 0;
-  height: 0;
-  border-left: 15px solid transparent;
-  border-right: 15px solid transparent;
-  border-top: 30px solid #1C3A58;
-  border-bottom-left-radius: 8px;
-  transform: rotate(45deg);
+    content: "";
+    position: absolute;
+    bottom: -15px;
+    left: -15px;
+    width: 0;
+    height: 0;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-top: 30px solid #1C3A58;
+    border-bottom-left-radius: 8px;
+    transform: rotate(45deg);
 }
 
 .hello-text {
-  margin-top: 100px;
+    margin-top: 100px;
 }
 
-/*Стили для робота на странице авторизации*/
+/*Стили для робота*/
 #custom-image {
-  position: absolute;
-  top: 400px;
-  left: -180px;
-  width: 150px; /* Размер картинки */
-  height: 150px;
+    position: absolute;
+    top: 400px;
+    left: -180px;
+    width: 150px;
+    height: 150px;
 }
-
 
 #dialog-content {
+    display: flex;
+    align-items: center;
+    position: relative;
+    top: 50%;
+    font-size: large;
     text-align: center;
-    line-height: 1.5;
+    justify-content: center;
+}
+
+#image-upload {
+    position: absolute;
+    top: 35%;
+    right: -280px; /* Измените это значение в зависимости от вашего требования */
+    /* Другие стили для user-menu-cell */
+}
+
+#save-archive {
+    position: absolute;
+    top: 10%;
+    right: -100px; /* Измените это значение в зависимости от вашего требования */
+    /* Другие стили для user-menu-cell */
+}
+
+#check-history {
+    position: absolute;
+    top: 55%;
+    right: -550px; /* Измените это значение в зависимости от вашего требования */
+    /* Другие стили для user-menu-cell */
+}
+
+#instruction {
+    position: absolute;
+    top: 35%;
+    right: -550px; /* Измените это значение в зависимости от вашего требования */
+    /* Другие стили для user-menu-cell */
+}
+#redirectHistory {
+    position: absolute;
+    top: 58%;
+    right: 140px;
+    display: none;
+}
+
+#check-favourites {
+    position: absolute;
+    top: 55%;
+    right: -280px; /* Измените это значение в зависимости от вашего требования */
+    /* Другие стили для user-menu-cell */
+}
+
+#back {
+    position: absolute;
+    top: 75%;
+    right: -415px; /* Измените это значение в зависимости от вашего требования */
+    display: none;
+    /* Другие стили для user-menu-cell */
+}
+
+#done {
+    position: absolute;
+    top: 75%;
+    right: -415px; /* Измените это значение в зависимости от вашего требования */
+    display: none;
+    /* Другие стили для user-menu-cell */
+}
+#save-archive {
+    position: absolute;
+    top: 55%;
+    right: -415px; /* Измените это значение в зависимости от вашего требования */
+    display: none;
+    /* Другие стили для user-menu-cell */
+}
+
+
+
+.image-upload {
+    margin-left: 200px;
+}
+
+#history{
+    margin-right: 400px;
+    z-index: 999;
+    position: relative;
+    display: none;
+    margin-top: 235px;
+}
+
+#upload-form{
+    display: none;
+    margin-left: 730px;
+    margin-top: 7%;
 }
 
 
@@ -286,6 +370,7 @@ input[type=submit]:hover {
     width: 20px;
     height: 20px;
 }
+
 
 /* Стили для кнопки "Скачать архив" */
 .download-button {

@@ -31,6 +31,7 @@ from database.database_manager import db_history_view
 from database.database_manager import db_receive_date
 from database.database_manager import db_admin
 from database.database_manager import db_history_save
+from database.database_manager import db_favourites_view
 
 from ml.process_image import SegmentationModule
 from ml.process_image import connect_to_web
@@ -127,6 +128,23 @@ def history_page(request: Request, date_from: str | None = Query(default=None), 
         return templates.TemplateResponse(
             "history.html",
             {"request": request, "all_history": all_history},
+        )
+
+@app.get("/favourites")
+def history_page(request: Request, date_from: str | None = Query(default=None), date_to: str | None= Query(default=None)):
+    telegram_token = request.cookies.get('token')
+    telegram_id = request.cookies.get('tg_uid')
+    if date_from is None or date_to is None:
+        fav = db_favourites_view(user_id=telegram_id)
+    elif date_from is not None and date_to is not None:
+        fav = db_favourites_view(user_id=telegram_id)
+
+    if telegram_id is None and telegram_token is None:
+        return RedirectResponse('/')
+    else:
+        return templates.TemplateResponse(
+            "favourites.html",
+            {"request": request, "fav": fav},
         )
 
 
