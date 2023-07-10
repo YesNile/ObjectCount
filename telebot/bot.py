@@ -54,7 +54,7 @@ def bot_message(message):
     if message.chat.type == 'private':
         if message.text == 'Сайт':
             markup = types.InlineKeyboardMarkup()
-            markup.add(types.InlineKeyboardButton('Перейти на сайт', url='https://www.google.ru/'))
+            markup.add(types.InlineKeyboardButton('Перейти на сайт', url='http://objectcount.com/'))
             bot.reply_to(message, 'Нажмите, для перехода на сайт', reply_markup=markup)
 
         elif message.text == 'Инструкция':
