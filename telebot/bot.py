@@ -54,7 +54,7 @@ def bot_message(message):
     if message.chat.type == 'private':
         if message.text == 'Сайт':
             markup = types.InlineKeyboardMarkup()
-            markup.add(types.InlineKeyboardButton('Перейти на сайт', url='https://www.google.ru/'))
+            markup.add(types.InlineKeyboardButton('Перейти на сайт', url='http://objectcount.com/'))
             bot.reply_to(message, 'Нажмите, для перехода на сайт', reply_markup=markup)
 
         elif message.text == 'Инструкция':
@@ -234,7 +234,7 @@ def callback_message(callback):
     image = dataBase.db_message_photo(callback.message.message_id)
     if callback.message:
         if callback.data == 'save':
-            file = open(fr"{image[0][1].split('.')[0]}.zip", 'rb')
+            file = open(fr"{image[0][3]}", 'rb')
             bot.send_document(callback.message.chat.id, file)
 
         elif callback.data == 'favourites':
